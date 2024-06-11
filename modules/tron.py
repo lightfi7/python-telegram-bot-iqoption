@@ -146,9 +146,12 @@ class TronClient:
             wallet_address = w["base58check_address"]
             transactions_ = self.get_transactions(wallet_address, min_timestamp, max_timestamp)
             transactions.append({
-                "userId": w["uid"],
+                "uid": w["uid"],
                 "data": [transaction for transaction in transactions_ if transaction["to"] == wallet_address],
             })
             time.sleep(0.8)
         if cb:
             cb(transactions)
+
+
+tron_client = TronClient()

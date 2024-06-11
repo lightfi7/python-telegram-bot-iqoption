@@ -3,7 +3,8 @@ import re
 
 from modules.cache import cached, cache_up, cache
 from lang import translate
-from modules.database import insert_one
+from modules.database import insert_one, find_one
+from modules.tron import tron_client
 from modules.telegram import send_message, answer_callback_query, edit_message, delete_message, copy_message
 from modules.utils import is_number, is_valid_email
 
@@ -185,6 +186,64 @@ def generate_response(data):
                         }
                     }
                     edit_message(json)
+                    pass
+                elif callback_data == '@subscribe':
+
+                    msg = f' {translate("choose_plan", user["language"])}'
+                    keyboard = [
+                        [{'text': opt['label'], 'callback_data': f'#option>{opt["value"]}'}]
+                        for opt in [
+                            {'label': f'{translate("monthly", user["language"])}', 'value': '@monthly'},
+                            {'label': f'{translate("annual", user["language"])}', 'value': '@annual'},
+                        ]
+                    ]
+                    json = {
+                        'chat_id': uid,
+                        'text': msg,
+                        'reply_markup': {
+                            'inline_keyboard': keyboard
+                        }
+                    }
+                    send_message(json)
+
+                    pass
+                elif callback_data == '@monthly':
+                    wallet = None
+                    if 'wallet' in user:
+                        wallet = user['wallet']
+                    else:
+                        wallet = tron_client.create_wallet()
+                        user['wallet'] = wallet
+                        cache_up(uid, user)
+                    # get price from database,
+                    cfg = find_one('config', {'name': 'monthly'})
+                    price = cfg['value']
+                    msg = f'{translate('deposit', user['language'])}'.format('monthly', price, wallet['base58check_address'])
+                    json = {
+                        'chat_id': uid,
+                        'text': msg,
+                        'parse_mode': 'markdown'
+                    }
+                    send_message(json)
+                    pass
+                elif callback_data == '@annual':
+                    wallet = None
+                    if 'wallet' in user:
+                        wallet = user['wallet']
+                    else:
+                        wallet = tron_client.create_wallet()
+                        user['wallet'] = wallet
+                        cache_up(uid, user)
+                    # get price from database,
+                    cfg = find_one('config', {'name': 'annual'})
+                    price = cfg['value']
+                    msg = f'{translate('deposit', user['language'])}'.format('annual', price, wallet['base58check_address'])
+                    json = {
+                        'chat_id': uid,
+                        'text': msg,
+                        'parse_mode': 'markdown'
+                    }
+                    send_message(json)
                     pass
                 elif callback_data == '@redeem_code':
                     # validate redeem_code

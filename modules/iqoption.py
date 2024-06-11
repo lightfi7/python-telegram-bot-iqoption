@@ -106,14 +106,16 @@ class Iqoption:
                     msg = ''
                     if martin_gale == 0:
                         msg = 'Direct WIN ✅'
-                        msg = f'{translate("trade_success", self.user["language"])} {self.symbol}'.format('WIN', f'{win:6.2f}')
+                        msg = f'{translate("trade_success", self.user["language"])} {self.symbol}'.format('WIN',
+                                                                                                          f'{win:6.2f}')
                     elif martin_gale == 1:
                         msg = 'WIN GALE 1 ✅'
-                        msg = f'{translate("trade_success", self.user["language"])} {self.symbol}'.format('WIN', f'{win:6.2f}')
+                        msg = f'{translate("trade_success", self.user["language"])} {self.symbol}'.format('WIN',
+                                                                                                          f'{win:6.2f}')
                     elif martin_gale == 2:
                         msg = 'WIN GALE 2 ✅'
                         msg = f'{translate("trade_success", self.user["language"])} {self.symbol}'.format('WIN',
-                                                                                                      f'{win:6.2f}')
+                                                                                                          f'{win:6.2f}')
                     send_message({
                         'chat_id': self.uid,
                         'text': msg

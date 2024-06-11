@@ -24,7 +24,10 @@
     "started": "Your bot is now active and ready for trading.",
     "trade_unsuccessful": "Trade at {} unsuccessful. Please check your balance and try again.",
     "trade_success": "You are {}, {}",
-
+    "choose_plan": "Please choose your plan",
+    "monthly": "Monthly",
+    "annual": "Annual",
+    "deposit": "Hello valued subscriber! This is just a quick reminder about maintaining your active subscription status for `{}`. To keep your account in good standing, please deposit $`{}` to the following address: `{}`.",
 
     "start": "Start Trading",
     "stop": "Stop Trading",
