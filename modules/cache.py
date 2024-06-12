@@ -1,4 +1,4 @@
-from modules.database import update_one
+from modules.database import update_one, find_many
 
 cache = {}
 
@@ -23,4 +23,9 @@ def cache_down(key):
 
 
 def init():
-    cache['users'] = {}
+    users = find_many('users', {})
+    for user in users:
+        udata = {
+            key: user[key] for key in user
+        }
+        cache[user['id']] = udata

@@ -1,11 +1,12 @@
 from dotenv import load_dotenv
 
-from modules.database import update_one
 
 load_dotenv()
 
 from flask import Flask, request
+import modules.scheduler as scheduler
 import modules.cache as cache
+from modules.database import update_one
 from modules.mastermind import generate_response
 from modules.telegram import setup_webhook
 from modules.tron import TronClient
@@ -47,8 +48,9 @@ def set_webhook():
 
 
 if __name__ == '__main__':
-    # cache.init()
-    # app.run(host='0.0.0.0', port=5000, debug=True)
+    cache.init()
+    scheduler.start()
+    app.run(host='0.0.0.0', port=5000, debug=True)
 
 
     # # print(tron_client.create_wallet())
@@ -59,12 +61,12 @@ if __name__ == '__main__':
     # #                      '7c77f4038b9b47cbd1ad8ffd22c13c39cb1aaedf8e21c3c490c7601372a9b8cf')
     # # tron_client.send_usdt('TRa9HDp9daJHwXF6eWTnXA3XN6FSqjT981', 1, 'TUaAqSLScdZVrb1UeZaxYqKgjNyaoDWetY',
     # #                       '7c77f4038b9b47cbd1ad8ffd22c13c39cb1aaedf8e21c3c490c7601372a9b8cf')
-    tron_client.monitor_deposits([
-        {
-            'uid': '',
-            'base58check_address': 'TE8y1GmkPE8ktpALtyuw7fC8aahcNun8cc',
-            'hex_address': '41cc0f03c8a4807a30c86406bbc44f7e11e9e24776',
-            'private_key': '7c77f4038b9b47cbd1ad8ffd22c13c39cb1aaedf8e21c3c490c7601372a9b8cf',
-            'public_key': '3b1a7dc59f73fae3d5efecacef227c939d814721488783047812165731a0b9f43b5f65d91a1055f816ff5d93c4cd261554273ea29df85b2cb9fcef49cb7caf9f'
-         }
-    ], lambda x: print(x))
+    # tron_client.monitor_deposits([
+    #     {
+    #         'uid': '',
+    #         'base58check_address': 'TE8y1GmkPE8ktpALtyuw7fC8aahcNun8cc',
+    #         'hex_address': '41cc0f03c8a4807a30c86406bbc44f7e11e9e24776',
+    #         'private_key': '7c77f4038b9b47cbd1ad8ffd22c13c39cb1aaedf8e21c3c490c7601372a9b8cf',
+    #         'public_key': '3b1a7dc59f73fae3d5efecacef227c939d814721488783047812165731a0b9f43b5f65d91a1055f816ff5d93c4cd261554273ea29df85b2cb9fcef49cb7caf9f'
+    #      }
+    # ], lambda x: print(x))

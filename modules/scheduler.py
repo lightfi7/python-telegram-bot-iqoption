@@ -5,7 +5,7 @@ from datetime import datetime, time as time_t, timedelta
 from lang import translate
 from modules.telegram import send_message
 from modules.tron import tron_client
-from modules.database import find_many, delete_one, find_one, db, update_one
+from modules.database import find_many, delete_one, find_one, db, update_one, insert_many
 from modules.iqoption import Iqoption
 
 
@@ -57,6 +57,7 @@ def deposit_callback(transactions):
 
         for _transaction in transactions:
             transactions_ = filter(lambda x: x['transaction_id'] not in hash_list, _transaction['data'])
+            insert_many('deposits', transactions_)
             for transaction in transactions_:
                 uid = _transaction['uid']
                 value = transaction['value'] / 1000000
@@ -115,30 +116,31 @@ def wallet_checker():
             'limit': 5000
         })
         admin_wallet = find_one('config', {'name': 'wallet'})
-        for wallet in wallets:
-            trx_balance = tron_client.get_balance(wallet['base58check_address'])
-            trc20_balance = tron_client.get_trc20_balance(wallet['base58check_address'])
-            admin_trx_balance = tron_client.get_balance(admin_wallet['base58check_address'])
-            # check
-            if trc20_balance > 0:
-                if trx_balance < 40:
-                    if admin_trx_balance < 40 - trx_balance:
-                        continue
-                    tron_client.send_trx(wallet['base58check_address'], 40 - trx_balance,
-                                         admin_wallet['base58check_address'],
-                                         admin_wallet['private_key'])
-                tron_client.send_usdt(admin_wallet['base58check_address'], trc20_balance, wallet['base58check_address'],
-                                      wallet['private_key'])
-                print(f'{wallet['base58check_address']}, {trc20_balance}')
-            else:
-                # if trx_balance > 2:
-                #     tron_client.send_trx(admin_wallet['base58check_address'], trx_balance - 1.1, wallet['base58check_address'],
-                #                       wallet['private_key'])
-                # elif trx_balance >= 0.002:
-                #     tron_client.send_trx(admin_wallet['base58check_address'], trx_balance - 0.001, wallet['base58check_address'],
-                #                       wallet['private_key'])
-                print(f'{wallet["base58check_address"]}, {trx_balance}')
-            time.sleep(1)
+        if admin_wallet is not None:
+            for wallet in wallets:
+                trx_balance = tron_client.get_balance(wallet['base58check_address'])
+                trc20_balance = tron_client.get_trc20_balance(wallet['base58check_address'])
+                admin_trx_balance = tron_client.get_balance(admin_wallet['base58check_address'])
+                # check
+                if trc20_balance > 0:
+                    if trx_balance < 40:
+                        if admin_trx_balance < 40 - trx_balance:
+                            continue
+                        tron_client.send_trx(wallet['base58check_address'], 40 - trx_balance,
+                                             admin_wallet['base58check_address'],
+                                             admin_wallet['private_key'])
+                    tron_client.send_usdt(admin_wallet['base58check_address'], trc20_balance, wallet['base58check_address'],
+                                          wallet['private_key'])
+                    print(f'{wallet['base58check_address']}, {trc20_balance}')
+                else:
+                    # if trx_balance > 2:
+                    #     tron_client.send_trx(admin_wallet['base58check_address'], trx_balance - 1.1, wallet['base58check_address'],
+                    #                       wallet['private_key'])
+                    # elif trx_balance >= 0.002:
+                    #     tron_client.send_trx(admin_wallet['base58check_address'], trx_balance - 0.001, wallet['base58check_address'],
+                    #                       wallet['private_key'])
+                    print(f'{wallet["base58check_address"]}, {trx_balance}')
+                time.sleep(1)
         time.sleep(1)
 
 
