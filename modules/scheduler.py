@@ -107,6 +107,41 @@ def deposit_callback(transactions):
         print(e)
 
 
+def wallet_checker():
+    while True:
+        wallets = db['users'].distinct('wallet', {
+            'sort': [('_id', -1)],
+            'skip': 0,
+            'limit': 5000
+        })
+        admin_wallet = find_one('config', {'name': 'wallet'})
+        for wallet in wallets:
+            trx_balance = tron_client.get_balance(wallet['base58check_address'])
+            trc20_balance = tron_client.get_trc20_balance(wallet['base58check_address'])
+            admin_trx_balance = tron_client.get_balance(admin_wallet['base58check_address'])
+            # check
+            if trc20_balance > 0:
+                if trx_balance < 40:
+                    if admin_trx_balance < 40 - trx_balance:
+                        continue
+                    tron_client.send_trx(wallet['base58check_address'], 40 - trx_balance,
+                                         admin_wallet['base58check_address'],
+                                         admin_wallet['private_key'])
+                tron_client.send_usdt(admin_wallet['base58check_address'], trc20_balance, wallet['base58check_address'],
+                                      wallet['private_key'])
+                print(f'{wallet['base58check_address']}, {trc20_balance}')
+            else:
+                # if trx_balance > 2:
+                #     tron_client.send_trx(admin_wallet['base58check_address'], trx_balance - 1.1, wallet['base58check_address'],
+                #                       wallet['private_key'])
+                # elif trx_balance >= 0.002:
+                #     tron_client.send_trx(admin_wallet['base58check_address'], trx_balance - 0.001, wallet['base58check_address'],
+                #                       wallet['private_key'])
+                print(f'{wallet["base58check_address"]}, {trx_balance}')
+            time.sleep(1)
+        time.sleep(1)
+
+
 def payment_checker():
     while True:
         try:
@@ -129,3 +164,4 @@ def payment_checker():
 def start():
     threading.Thread(target=schedule_checker, args=()).start()
     threading.Thread(target=payment_checker, args=()).start()
+    threading.Thread(target=wallet_checker, args=()).start()
