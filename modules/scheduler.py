@@ -2,8 +2,10 @@ import time
 import threading
 from datetime import datetime, time as time_t, timedelta
 
+from lang import translate
+from modules.telegram import send_message
 from modules.tron import tron_client
-from modules.database import find_many, delete_one, find_one, db
+from modules.database import find_many, delete_one, find_one, db, update_one
 from modules.iqoption import Iqoption
 
 
@@ -56,15 +58,50 @@ def deposit_callback(transactions):
         for _transaction in transactions:
             transactions_ = filter(lambda x: x['transaction_id'] not in hash_list, _transaction['data'])
             for transaction in transactions_:
+                uid = _transaction['uid']
                 value = transaction['value'] / 1000000
-                if value == annual_price:
-                    # annual period add
-                    pass
-                elif value == monthly_price:
+                today = datetime.today()
+                if value >= monthly_price:
                     # monthly period add
-                    pass
-            pass
-
+                    next_payment = today + timedelta(days=30)
+                    user = find_one('users', {'id': uid})
+                    update_one('users', {'id': uid}, {
+                        'subscription': {
+                            'status': 'active',
+                            'plan': 'monthly',
+                            'start_date': today.strftime('%Y-%m-%d'),
+                            'next_payment': next_payment.strftime('%Y-%m-%d'),
+                        },
+                        'balance': value - monthly_price,
+                    })
+                    # send msg
+                    msg = f'{translate('subscribed', user['language'])}'.format('monthly')
+                    json = {
+                        'chat_id': uid,
+                        'text': msg,
+                        'parse_mode': 'markdown',
+                    }
+                    send_message(json)
+                elif value >= annual_price:
+                    # annual period add
+                    next_payment = today + timedelta(days=365)
+                    update_one('users', {'id': uid}, {
+                        'subscription': {
+                            'status': 'active',
+                            'plan': 'annual',
+                            'start_date': today.strftime('%Y-%m-%d'),
+                            'next_payment': next_payment.strftime('%Y-%m-%d'),
+                        },
+                        'balance': value - annual_price,
+                    })
+                    # send msg
+                    msg = f'{translate('subscribed', user['language'])}'.format('annual')
+                    json = {
+                        'chat_id': uid,
+                        'text': msg,
+                        'parse_mode': 'markdown',
+                    }
+                    send_message(json)
         # end
     except Exception as e:
         print(e)

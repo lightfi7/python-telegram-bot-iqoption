@@ -28,6 +28,8 @@
     "monthly": "Monthly",
     "annual": "Annual",
     "deposit": "Hello valued subscriber! This is just a quick reminder about maintaining your active subscription status for `{}`. To keep your account in good standing, please deposit $`{}` to the following address: `{}`.",
+    "subscribed": "Your subscription is active on the `{}` plan",
+
 
     "start": "Start Trading",
     "stop": "Stop Trading",
