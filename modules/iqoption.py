@@ -65,8 +65,6 @@ class Iqoption:
 
         martin_gale = 0
 
-        scheduled_time_str = self.task['time']
-
         while martin_gale <= int(self.user['settings']['strategy']):
 
             if martin_gale == 1:
@@ -94,7 +92,7 @@ class Iqoption:
                     print("Loss " + str(win) + "$")
                     if martin_gale == int(self.user['settings']['strategy']):
                         msg = 'LOSS🔻'
-                        msg = f'{translate("trade_success", self.user["language"])} {self.task['symbol']}'.format('LOSS',
+                        msg = f'{translate("trade_success", self.user["language"])}'.format('LOSS',
                                                                                                           f'{win:6.2f}')
                         send_message({
                             'chat_id': self.uid,
@@ -106,15 +104,15 @@ class Iqoption:
                     msg = ''
                     if martin_gale == 0:
                         msg = 'Direct WIN ✅'
-                        msg = f'{translate("trade_success", self.user["language"])} {self.symbol}'.format('WIN',
+                        msg = f'{translate("trade_success", self.user["language"])}'.format('WIN',
                                                                                                           f'{win:6.2f}')
                     elif martin_gale == 1:
                         msg = 'WIN GALE 1 ✅'
-                        msg = f'{translate("trade_success", self.user["language"])} {self.symbol}'.format('WIN',
+                        msg = f'{translate("trade_success", self.user["language"])}'.format('WIN',
                                                                                                           f'{win:6.2f}')
                     elif martin_gale == 2:
                         msg = 'WIN GALE 2 ✅'
-                        msg = f'{translate("trade_success", self.user["language"])} {self.symbol}'.format('WIN',
+                        msg = f'{translate("trade_success", self.user["language"])}'.format('WIN',
                                                                                                           f'{win:6.2f}')
                     send_message({
                         'chat_id': self.uid,
