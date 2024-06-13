@@ -19,7 +19,7 @@
     "manual": "Here are the instructions for using the bot...",
     "no_subscription": "It seems you don't have an active subscription. \nPlease /subscribe to start using the bot.",
     "register_account": "Please register your account to access the bot's features.",
-    "scheduled": "You have set a schedule for {} in UTC-{}.",
+    "scheduled": "Your bot will start the trading at {} in UTC-{}.",
     "stopped": "Your bot has been stopped. You can restart it anytime.",
     "started": "Your bot is now active and ready for trading.",
     "trade_unsuccessful": "Trade at {} unsuccessful. Please check your balance and try again.",

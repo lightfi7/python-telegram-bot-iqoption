@@ -464,16 +464,21 @@ def generate_response(data):
                 user = cache[uid]
                 if user['perm'] == 'guest' or user['started'] is not True:
                     continue
-
-                json = {
-                    'chat_id': uid,
-                    'from_chat_id': query['chat']['id'],
-                    'message_id': query['message_id'],
-                }
-                copy_message(json)
+                # json = {
+                #     'chat_id': uid,
+                #     'from_chat_id': query['chat']['id'],
+                #     'message_id': query['message_id'],
+                # }
+                # copy_message(json)
                 utc_offset, symbol, first_time, option, second_time, third_time = parse_channel_post(query['text'])
                 if utc_offset is None:
                     return
+                msg = f'{symbol}\n{option}\nDIRECT:     {first_time}\nM.GALE1:  {second_time}\nM.GALE2:  {third_time}';
+                json = {
+                    'chat_id': uid,
+                    'text': msg,
+                }
+                send_message(json)
                 insert_one('tasks', {
                     'uid': uid,
                     'utc_offset': utc_offset,
@@ -487,11 +492,11 @@ def generate_response(data):
                     'martin_gale': 0,
                     'checked': False
                 })
-                msg = f'{translate("scheduled", user["language"])}'.format(first_time, utc_offset)
-                send_message({
-                    'chat_id': uid,
-                    'text': msg
-                })
+                # msg = f'{translate("scheduled", user["language"])}'.format(first_time, utc_offset)
+                # send_message({
+                #     'chat_id': uid,
+                #     'text': msg
+                # })
             pass
         elif t == 'message':
             uid = query['from']['id']
