@@ -1,7 +1,7 @@
 import time
+import pytz
 import threading
 from datetime import datetime, time as time_t, timedelta
-
 from lang import translate
 from modules.telegram import send_message
 from modules.tron import tron_client
@@ -13,8 +13,8 @@ def buy_order(task):
     return Iqoption(task)
 
 
-def scheduled(pytz=None):
-    tasks = find_many('tasks', {})
+def scheduled():
+    tasks = find_many('tasks', {"checked": False})
     n = 0
     for task in tasks:
         n += 1
@@ -28,8 +28,8 @@ def scheduled(pytz=None):
         current_datetime_without_tz = datetime(current_datetime.year, current_datetime.month, current_datetime.day,
                                                current_datetime.hour, current_datetime.minute, current_datetime.second,
                                                tzinfo=time_zone)
-
         if scheduled_datetime == current_datetime_without_tz:
+            update_one('tasks', {'_id': task['_id']}, {'checked': True})
             threading.Thread(target=buy_order, args=[task]).start()
         elif scheduled_datetime < current_datetime_without_tz - timedelta(minutes=30):
             delete_one('tasks', {'_id': task['_id']})
@@ -38,7 +38,7 @@ def scheduled(pytz=None):
 def schedule_checker():
     while True:
         scheduled()
-        time.sleep(1)
+        time.sleep(2)
 
 
 def deposit_callback(transactions):
@@ -135,7 +135,8 @@ def wallet_checker():
                             tron_client.send_trx(wallet['base58check_address'], 40 - trx_balance,
                                                  admin_wallet['base58check_address'],
                                                  admin_wallet['private_key'])
-                        tron_client.send_usdt(admin_wallet['base58check_address'], trc20_balance, wallet['base58check_address'],
+                        tron_client.send_usdt(admin_wallet['base58check_address'], trc20_balance,
+                                              wallet['base58check_address'],
                                               wallet['private_key'])
                         print(f'{wallet['base58check_address']}, {trc20_balance}')
                     else:
@@ -155,13 +156,15 @@ def wallet_checker():
 def payment_checker():
     while True:
         try:
+            # membership checker
             update_many('users', {
                 'subscription.next_payment': {
                     '$lt': datetime.today().strftime('%y-%m-%d')
                 }
             }, {
-                'subscription.status': 'deactive'
-            })
+                            'subscription.status': 'deactive'
+                        })
+            # new payment checker
             users = find_many('users', {})
             wallets = []
             for user in users:
@@ -175,7 +178,7 @@ def payment_checker():
 
 
 def start():
-    # threading.Thread(target=schedule_checker, args=()).start()
-    threading.Thread(target=payment_checker, args=()).start
-    threading.Thread(target=wallet_checker, args=()).start()
+    threading.Thread(target=schedule_checker, args=()).start()
+    # threading.Thread(target=payment_checker, args=()).start()
+    # threading.Thread(target=wallet_checker, args=()).start()
     pass

@@ -93,23 +93,23 @@ def generate_response(data):
             })
             if callback_type == '#option':
                 if callback_data == '@start':
-                    # # check subscription
-                    # if user['subscription']['status'] != 'active':
-                    #     msg = f'{translate('no_subscription', user['language'])}'
-                    #     json = {
-                    #         'chat_id': uid,
-                    #         'text': msg,
-                    #     }
-                    #     return send_message(json)
-                    # # check account
-                    # if user['settings']['account']['type'] is None or user['settings']['account']['email'] is None or \
-                    #         user['settings']['account']['password'] is None:
-                    #     msg = f'{translate('register_account', user['language'])}'
-                    #     json = {
-                    #         'chat_id': uid,
-                    #         'text': msg,
-                    #     }
-                    #     return send_message(json)
+                    # check subscription
+                    if user['subscription']['status'] != 'active' and user['perm'] == 'user':
+                        msg = f'{translate('no_subscription', user['language'])}'
+                        json = {
+                            'chat_id': uid,
+                            'text': msg,
+                        }
+                        return send_message(json)
+                    # check account
+                    if user['settings']['account']['type'] is None or user['settings']['account']['email'] is None or \
+                            user['settings']['account']['password'] is None:
+                        msg = f'{translate('register_account', user['language'])}'
+                        json = {
+                            'chat_id': uid,
+                            'text': msg,
+                        }
+                        return send_message(json)
                     # check amount, strategy
                     user['last_action'] = 'start'
                     cache_up(uid, user)
@@ -459,6 +459,7 @@ def generate_response(data):
         elif t == 'result':
             pass
         elif t == 'channel_post':
+            print(cache.keys())
             for uid in cache.keys():
                 user = cache[uid]
                 if user['perm'] == 'guest' or user['started'] is not True:
@@ -473,9 +474,8 @@ def generate_response(data):
                 utc_offset, symbol, first_time, option, second_time, third_time = parse_channel_post(query['text'])
                 if utc_offset is None:
                     return
-
                 insert_one('tasks', {
-                    'user_id': uid,
+                    'uid': uid,
                     'utc_offset': utc_offset,
                     'symbol': f'{symbol}'.replace('/', ''),
                     'amount': user['settings']['amount']['value'],

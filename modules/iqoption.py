@@ -23,7 +23,7 @@ class Iqoption:
             })
             return
 
-        mode = 'REAL' if user['settings']['account'].get('type', 0) == 1 else 'PRACTICE'
+        mode = 'REAL' if user['settings']['account']['type'] == 0 else 'PRACTICE'
         self.task = task
         self.user = user
         self.email = account['email']
@@ -58,7 +58,7 @@ class Iqoption:
 
         amount = self.amount
 
-        if self.amount_type == -1:
+        if self.amount_type == 1:
             amount = int(int(balance) * self.amount / 100.0)
         else:
             amount = int(amount)
@@ -77,7 +77,7 @@ class Iqoption:
                 scheduled_time_str = self.task['third_time']
 
             buy_check, id = (self.API.buy_digital_spot(self.symbal, amount, self.option, self.duration))
-            print(id)
+            print(id, buy_check)
 
             if not buy_check:
                 send_message({
@@ -94,7 +94,7 @@ class Iqoption:
                     print("Loss " + str(win) + "$")
                     if martin_gale == int(self.user['settings']['strategy']):
                         msg = 'LOSS🔻'
-                        msg = f'{translate("trade_success", self.user["language"])} {self.symbol}'.format('LOSS',
+                        msg = f'{translate("trade_success", self.user["language"])} {self.task['symbol']}'.format('LOSS',
                                                                                                           f'{win:6.2f}')
                         send_message({
                             'chat_id': self.uid,
