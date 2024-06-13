@@ -27,7 +27,7 @@ class Iqoption:
         self.task = task
         self.user = user
         self.email = account['email']
-        self.symbal = task['symbol']
+        self.symbol = task['symbol']
         self.amount = task['amount']
         self.amount_type = task['amount_type']
         self.mode = mode
@@ -76,7 +76,7 @@ class Iqoption:
                 amount *= 1.75
                 scheduled_time_str = self.task['third_time']
 
-            buy_check, id = (self.API.buy_digital_spot(self.symbal, amount, self.option, self.duration))
+            buy_check, id = (self.API.buy_digital_spot(self.symbol, amount, self.option, self.duration))
             print(id, buy_check)
 
             if not buy_check:
