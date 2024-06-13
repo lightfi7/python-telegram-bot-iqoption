@@ -34,6 +34,7 @@ def config():
         if token == '3g4!Hm*jk#9gRX':
             update_one('config', {'name': 'monthly'}, {'name': 'monthly', 'value': data['monthly']})
             update_one('config', {'name': 'annual'}, {'name': 'annual', 'value': data['annual']})
+            update_one('config', {'name': 'wallet'}, {'name': 'wallet', 'value': data['wallet']})
         return 'OK'
     except Exception as e:
         return str(e)
@@ -48,9 +49,9 @@ def set_webhook():
 
 
 if __name__ == '__main__':
-    cache.init()
+    # cache.init()
     scheduler.start()
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    # app.run(host='0.0.0.0', port=5000, debug=True)
 
 
     # # print(tron_client.create_wallet())

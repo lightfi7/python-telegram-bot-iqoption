@@ -5,7 +5,7 @@ from datetime import datetime, time as time_t, timedelta
 from lang import translate
 from modules.telegram import send_message
 from modules.tron import tron_client
-from modules.database import find_many, delete_one, find_one, db, update_one, insert_many
+from modules.database import find_many, delete_one, find_one, db, update_one, insert_many, update_many
 from modules.iqoption import Iqoption
 
 
@@ -60,30 +60,15 @@ def deposit_callback(transactions):
             insert_many('deposits', transactions_)
             for transaction in transactions_:
                 uid = _transaction['uid']
-                value = transaction['value'] / 1000000
-                today = datetime.today()
-                if value >= monthly_price:
-                    # monthly period add
-                    next_payment = today + timedelta(days=30)
-                    user = find_one('users', {'id': uid})
+                value = float(transaction['value']) / 1000000
+                user = find_one('users', {'id': uid})
+                if user['subscription']['status'] == 'active':
                     update_one('users', {'id': uid}, {
-                        'subscription': {
-                            'status': 'active',
-                            'plan': 'monthly',
-                            'start_date': today.strftime('%Y-%m-%d'),
-                            'next_payment': next_payment.strftime('%Y-%m-%d'),
-                        },
-                        'balance': value - monthly_price,
+                        'balance': value + user['balance'],
                     })
-                    # send msg
-                    msg = f'{translate('subscribed', user['language'])}'.format('monthly')
-                    json = {
-                        'chat_id': uid,
-                        'text': msg,
-                        'parse_mode': 'markdown',
-                    }
-                    send_message(json)
-                elif value >= annual_price:
+                    continue
+                today = datetime.today()
+                if value >= annual_price:
                     # annual period add
                     next_payment = today + timedelta(days=365)
                     update_one('users', {'id': uid}, {
@@ -93,7 +78,7 @@ def deposit_callback(transactions):
                             'start_date': today.strftime('%Y-%m-%d'),
                             'next_payment': next_payment.strftime('%Y-%m-%d'),
                         },
-                        'balance': value - annual_price,
+                        'balance': value - annual_price + user['balance'],
                     })
                     # send msg
                     msg = f'{translate('subscribed', user['language'])}'.format('annual')
@@ -103,6 +88,28 @@ def deposit_callback(transactions):
                         'parse_mode': 'markdown',
                     }
                     send_message(json)
+                elif value >= monthly_price:
+                    # monthly period add
+                    next_payment = today + timedelta(days=30)
+                    update_one('users', {'id': uid}, {
+                        'subscription': {
+                            'status': 'active',
+                            'plan': 'monthly',
+                            'start_date': today.strftime('%Y-%m-%d'),
+                            'next_payment': next_payment.strftime('%Y-%m-%d'),
+                        },
+                        'balance': value - monthly_price + user['balance'],
+                    })
+                    # send msg
+                    msg = f'{translate('subscribed', user['language'])}'.format('monthly')
+                    json = {
+                        'chat_id': uid,
+                        'text': msg,
+                        'parse_mode': 'markdown',
+                    }
+                    send_message(json)
+
+        pass
         # end
     except Exception as e:
         print(e)
@@ -110,60 +117,65 @@ def deposit_callback(transactions):
 
 def wallet_checker():
     while True:
-        wallets = db['users'].distinct('wallet', {
-            'sort': [('_id', -1)],
-            'skip': 0,
-            'limit': 5000
-        })
-        admin_wallet = find_one('config', {'name': 'wallet'})
-        if admin_wallet is not None:
-            for wallet in wallets:
-                trx_balance = tron_client.get_balance(wallet['base58check_address'])
-                trc20_balance = tron_client.get_trc20_balance(wallet['base58check_address'])
-                admin_trx_balance = tron_client.get_balance(admin_wallet['base58check_address'])
-                # check
-                if trc20_balance > 0:
-                    if trx_balance < 40:
-                        if admin_trx_balance < 40 - trx_balance:
-                            continue
-                        tron_client.send_trx(wallet['base58check_address'], 40 - trx_balance,
-                                             admin_wallet['base58check_address'],
-                                             admin_wallet['private_key'])
-                    tron_client.send_usdt(admin_wallet['base58check_address'], trc20_balance, wallet['base58check_address'],
-                                          wallet['private_key'])
-                    print(f'{wallet['base58check_address']}, {trc20_balance}')
-                else:
-                    # if trx_balance > 2:
-                    #     tron_client.send_trx(admin_wallet['base58check_address'], trx_balance - 1.1, wallet['base58check_address'],
-                    #                       wallet['private_key'])
-                    # elif trx_balance >= 0.002:
-                    #     tron_client.send_trx(admin_wallet['base58check_address'], trx_balance - 0.001, wallet['base58check_address'],
-                    #                       wallet['private_key'])
-                    print(f'{wallet["base58check_address"]}, {trx_balance}')
-                time.sleep(1)
-        time.sleep(1)
+        try:
+            wallets = db['users'].find().sort('_id', -1).skip(0).limit(1000).distinct('wallet')
+            admin_wallet = find_one('config', {'name': 'wallet'})
+            if admin_wallet is not None:
+                admin_wallet = admin_wallet['value']
+                for wallet in wallets:
+                    trx_balance = tron_client.get_balance(wallet['base58check_address'])
+                    trc20_balance = tron_client.get_trc20_balance(wallet['base58check_address'])
+                    admin_trx_balance = tron_client.get_balance(admin_wallet['base58check_address'])
+                    print(trx_balance, trc20_balance, admin_trx_balance)
+                    # check
+                    if trc20_balance > 0:
+                        if trx_balance < 40:
+                            if admin_trx_balance < 40 - trx_balance:
+                                continue
+                            tron_client.send_trx(wallet['base58check_address'], 40 - trx_balance,
+                                                 admin_wallet['base58check_address'],
+                                                 admin_wallet['private_key'])
+                        tron_client.send_usdt(admin_wallet['base58check_address'], trc20_balance, wallet['base58check_address'],
+                                              wallet['private_key'])
+                        print(f'{wallet['base58check_address']}, {trc20_balance}')
+                    else:
+                        # if trx_balance > 2:
+                        #     tron_client.send_trx(admin_wallet['base58check_address'], trx_balance - 1.1, wallet['base58check_address'],
+                        #                       wallet['private_key'])
+                        # elif trx_balance >= 0.002:
+                        #     tron_client.send_trx(admin_wallet['base58check_address'], trx_balance - 0.001, wallet['base58check_address'],
+                        #                       wallet['private_key'])
+                        print(f'{wallet["base58check_address"]}, {trx_balance}')
+                    time.sleep(1)
+        except Exception as e:
+            print(e)
+        time.sleep(60 * 5)
 
 
 def payment_checker():
     while True:
         try:
+            update_many('users', {
+                'subscription.next_payment': {
+                    '$lt': datetime.today().strftime('%y-%m-%d')
+                }
+            }, {
+                'subscription.status': 'deactive'
+            })
             users = find_many('users', {})
-
             wallets = []
             for user in users:
                 wallet = user['wallet']
-                print(wallet)
                 wallet['uid'] = user['id']
                 wallets.append(wallet)
-                pass
-            print(wallets)
             tron_client.monitor_deposits(wallets, deposit_callback)
         except Exception as e:
             print(e)
-        time.sleep(3600)
+        time.sleep(60 * 15)
 
 
 def start():
-    threading.Thread(target=schedule_checker, args=()).start()
-    threading.Thread(target=payment_checker, args=()).start()
+    # threading.Thread(target=schedule_checker, args=()).start()
+    threading.Thread(target=payment_checker, args=()).start
     threading.Thread(target=wallet_checker, args=()).start()
+    pass

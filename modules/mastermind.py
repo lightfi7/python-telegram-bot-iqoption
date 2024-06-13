@@ -84,7 +84,8 @@ def generate_response(data):
                 },
                 'last_action': None,
                 'perm': 'guest',
-                'started': False
+                'started': False,
+                'balance': 0
             })
             answer_callback_query({
                 'callback_query_id': query['id'],
@@ -500,6 +501,12 @@ def generate_response(data):
                 'username': query['from']['username'],
                 'language': 'en',
                 'team_count': 0,
+                'subscription': {
+                    'status': 'deactive',
+                    'plan': None,
+                    'start_date': None,
+                    'next_payment': None,
+                },
                 'settings': {
                     'account': {
                         'type': None,
@@ -514,7 +521,8 @@ def generate_response(data):
                 },
                 'last_action': None,
                 'perm': 'guest',
-                'started': False
+                'started': False,
+                'balance': 0
             })
             if 'start' in text.lower():
                 msg = f' {translate("welcome", user["language"])}'

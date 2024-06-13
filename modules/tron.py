@@ -45,7 +45,7 @@ class TronClient:
         try:
             private_key = PrivateKey(bytes.fromhex(from_private_key))
             token_decimals = 6
-            amount_with_decimals = amount * (10 ** token_decimals)
+            amount_with_decimals = int(amount * (10 ** token_decimals))
             txn = (
                 self.tron.trx.transfer(from_address, to_address, amount_with_decimals)
                 .memo('')
@@ -63,7 +63,7 @@ class TronClient:
     def send_usdt(self, to_address, amount, from_address, from_private_key):
         try:
             token_decimals = 6
-            amount_with_decimals = amount * (10 ** token_decimals)
+            amount_with_decimals = int(amount * (10 ** token_decimals))
             private_key = PrivateKey(bytes.fromhex(from_private_key))
             contract = self.tron.get_contract(USDT_CONTRACT_ADDRESS)
             txn = (
@@ -81,7 +81,7 @@ class TronClient:
             return e
 
     def request_transactions(self, wallet_address, min_timestamp, max_timestamp, limit=100):
-        url = f"https://api.trongrid.io/v1/accounts/{wallet_address}/transactions/trc20?&contract_address={USDT_CONTRACT_ADDRESS}&only_to=true&only_confirmed=true&limit={limit}&min_timestamp={min_timestamp}&max_timestamp={max_timestamp}"
+        url = f"https://api.trongrid.io/v1/accounts/{wallet_address}/transactions/trc20?contract_address={USDT_CONTRACT_ADDRESS}&only_to=true&only_confirmed=true&limit={limit}&min_timestamp={min_timestamp}&max_timestamp={max_timestamp}"
         headers = {"accept": "application/json"}
 
         try:
