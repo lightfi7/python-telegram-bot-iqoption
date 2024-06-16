@@ -81,7 +81,7 @@ def deposit_callback(transactions):
                         'balance': value - annual_price + user['balance'],
                     })
                     # send msg
-                    msg = f'{translate(subscribed, user[language])}'.format('annual')
+                    msg = f'{translate("subscribed", user["language"])}'.format('annual')
                     json = {
                         'chat_id': uid,
                         'text': msg,
@@ -101,7 +101,7 @@ def deposit_callback(transactions):
                         'balance': value - monthly_price + user['balance'],
                     })
                     # send msg
-                    msg = f'{translate(subscribed, user[language])}'.format('monthly')
+                    msg = f'{translate("subscribed", user["language"])}'.format('monthly')
                     json = {
                         'chat_id': uid,
                         'text': msg,

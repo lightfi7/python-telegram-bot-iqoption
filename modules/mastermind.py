@@ -440,7 +440,7 @@ def generate_response(data):
                         user['started'] = False
                     user['last_action'] = None
                     cache_up(uid, user)
-                    msg = f'{translate("started', user["language"])}'
+                    msg = f'{translate("started", user["language"])}'
                     json = {
                         'chat_id': uid,
                         'text': msg,
@@ -450,7 +450,7 @@ def generate_response(data):
                 elif callback_data == '@no':
                     user['last_action'] = None
                     cache_up(uid, user)
-                    msg = f'{translate("stopped', user["language"])}'
+                    msg = f'{translate("stopped", user["language"])}'
                     json = {
                         'chat_id': uid,
                         'text': msg,
