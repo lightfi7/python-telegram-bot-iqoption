@@ -48,7 +48,8 @@ def set_webhook():
         return "webhook setup failed"
 
 
+cache.init()
+scheduler.start()
+
 if __name__ == '__main__':
-    cache.init()
-    scheduler.start()
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    app.run(host='0.0.0.0', port=5002, debug=True)
