@@ -163,7 +163,7 @@ def payment_checker():
                 }
             }, {
                             'subscription.status': 'deactive'
-                        })
+                        }, False)
             # new payment checker
             users = find_many('users', {})
             wallets = []
