@@ -1,6 +1,5 @@
 from dotenv import load_dotenv
 
-
 load_dotenv()
 
 from flask import Flask, request
@@ -39,6 +38,7 @@ def config():
     except Exception as e:
         return str(e)
 
+
 @app.route('/set_webhook', methods=['GET', 'POST'])
 def set_webhook():
     s = setup_webhook()
@@ -52,4 +52,4 @@ cache.init()
 scheduler.start()
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5002, debug=True)
+    app.run(host='0.0.0.0', port=5000, debug=True)

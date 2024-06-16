@@ -162,8 +162,8 @@ def payment_checker():
                     '$lt': datetime.today().strftime('%y-%m-%d')
                 }
             }, {
-                            'subscription.status': 'deactive'
-                        }, False)
+                'subscription.status': 'deactive'
+            }, False)
             # new payment checker
             users = find_many('users', {})
             wallets = []

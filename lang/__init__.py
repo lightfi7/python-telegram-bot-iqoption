@@ -1,6 +1,6 @@
 import json
 
-with open('./lang/lang.json', 'r', encoding="utf-8") as file:
+with open("./lang/lang.json", "r", encoding="utf-8") as file:
     translations = json.load(file)
 
 
