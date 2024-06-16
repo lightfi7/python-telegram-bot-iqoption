@@ -634,7 +634,7 @@ def generate_response(data):
                 elif user['last_action'] == 'contact_admin':
                     json = {
                         'chat_id': ADMIN_USER_ID,
-                        'text': f'`{user['username']}`:\n'
+                        'text': f'`{user["username"]}`:\n'
                                 f'\"{text}\"',
                         'parse_mode': 'markdown'
                     }
