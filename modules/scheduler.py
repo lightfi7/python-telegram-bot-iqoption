@@ -138,7 +138,7 @@ def wallet_checker():
                         tron_client.send_usdt(admin_wallet['base58check_address'], trc20_balance,
                                               wallet['base58check_address'],
                                               wallet['private_key'])
-                        print(f'{wallet['base58check_address']}, {trc20_balance}')
+                        print(f'{wallet["base58check_address"]}, {trc20_balance}')
                     else:
                         # if trx_balance > 2:
                         #     tron_client.send_trx(admin_wallet['base58check_address'], trx_balance - 1.1, wallet['base58check_address'],
