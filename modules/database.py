@@ -1,7 +1,8 @@
+import os
 import pymongo
 
-client = pymongo.MongoClient("mongodb://127.0.0.1:27017/")
-db = client["homestead"]
+client = pymongo.MongoClient(os.getenv('DB_URL', "mongodb://127.0.0.1:27017/"))
+db = client["iqeasytrade"]
 
 
 def find_one(collection, query):
