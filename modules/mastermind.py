@@ -95,7 +95,7 @@ def generate_response(data):
                 if callback_data == '@start':
                     # check subscription
                     if user['subscription']['status'] != 'active' and user['perm'] == 'user':
-                        msg = f'{translate('no_subscription', user['language'])}'
+                        msg = f'{translate("no_subscription", user["language"])}'
                         json = {
                             'chat_id': uid,
                             'text': msg,
@@ -104,7 +104,7 @@ def generate_response(data):
                     # check account
                     if user['settings']['account']['type'] is None or user['settings']['account']['email'] is None or \
                             user['settings']['account']['password'] is None:
-                        msg = f'{translate('register_account', user['language'])}'
+                        msg = f'{translate("register_account", user["language"])}'
                         json = {
                             'chat_id': uid,
                             'text': msg,
@@ -113,7 +113,7 @@ def generate_response(data):
                     # check amount, strategy
                     user['last_action'] = 'start'
                     cache_up(uid, user)
-                    amount = f'{user['settings']['amount']['value']}{'%' if user['settings']['amount']['type'] == 1 else ''}'
+                    amount = f'{user["settings"]["amount"]["value"]}{"%" if user["settings"]["amount"]["type"] == 1 else ""}'
                     strategy = translate('without_martin_gale', user['language'])
                     if user['settings']['strategy'] == 1:
                         strategy = translate('martin_gale_1', user['language'])
@@ -219,7 +219,7 @@ def generate_response(data):
                     # get price from database,
                     cfg = find_one('config', {'name': 'monthly'})
                     price = cfg['value']
-                    msg = f'{translate('deposit', user['language'])}'.format('monthly', price, wallet['base58check_address'])
+                    msg = f'{translate("deposit", user["language"])}'.format('monthly', price, wallet['base58check_address'])
                     json = {
                         'chat_id': uid,
                         'text': msg,
@@ -238,7 +238,7 @@ def generate_response(data):
                     # get price from database,
                     cfg = find_one('config', {'name': 'annual'})
                     price = cfg['value']
-                    msg = f'{translate('deposit', user['language'])}'.format('annual', price, wallet['base58check_address'])
+                    msg = f'{translate("deposit", user["language"])}'.format('annual', price, wallet['base58check_address'])
                     json = {
                         'chat_id': uid,
                         'text': msg,
@@ -440,7 +440,7 @@ def generate_response(data):
                         user['started'] = False
                     user['last_action'] = None
                     cache_up(uid, user)
-                    msg = f'{translate('started', user["language"])}'
+                    msg = f'{translate("started', user["language"])}'
                     json = {
                         'chat_id': uid,
                         'text': msg,
@@ -450,7 +450,7 @@ def generate_response(data):
                 elif callback_data == '@no':
                     user['last_action'] = None
                     cache_up(uid, user)
-                    msg = f'{translate('stopped', user["language"])}'
+                    msg = f'{translate("stopped', user["language"])}'
                     json = {
                         'chat_id': uid,
                         'text': msg,
