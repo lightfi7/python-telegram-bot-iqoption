@@ -26,13 +26,13 @@ def is_valid_email(email):
         return False
 
 
-def generate_key(user):
+def generate_key(v):
     cipher = AES.new(key, AES.MODE_CFB, iv)
-    user_data = f'{user["id"]}@{user["username"]}'
-    return ''.join(f'{byte:02X}' for byte in cipher.encrypt(user_data.encode('utf-8')))
+    return ''.join(f'{byte:02X}' for byte in cipher.encrypt(v.encode('utf-8')))
 
 
-def verify_key(user, token):
+def verify_key(token):
     cipher = AES.new(key, AES.MODE_CFB, iv)
     decrypted_str = cipher.decrypt(token)
-    return decrypted_str.decode('utf-8') == f'{user.id}@{user.username}'
+    v1, v2 = decrypted_str.decode('utf-8').split("@")
+    return v1, v2

@@ -1,12 +1,13 @@
 import os
 import re
+from datetime import datetime, timedelta
 
 from modules.cache import cached, cache_up, cache
 from lang import translate
-from modules.database import insert_one, find_one
+from modules.database import insert_one, find_one, update_one
 from modules.tron import tron_client
 from modules.telegram import send_message, answer_callback_query, edit_message, delete_message, copy_message
-from modules.utils import is_number, is_valid_email
+from modules.utils import is_number, is_valid_email, generate_key, verify_key
 
 ADMIN_USER_ID = os.getenv('ADMIN_USER_ID', 6343801713)
 
@@ -247,9 +248,40 @@ def generate_response(data):
                     send_message(json)
                     pass
                 elif callback_data == '@redeem_code':
-                    # validate redeem_code
                     # Generate new redeem_code
-                    # Input redeem_code +1day
+                    msg = f' {translate("welcome", user["language"])}'
+                    keyboard = [
+                        [{'text': opt['label'], 'callback_data': f'#option>{opt["value"]}'}]
+                        for opt in ([
+                            {'label': f'{translate("my_redeem_code", user["language"])}', 'value': '@my_redeem_code'},
+                            {'label': f'{translate("enter_redeem_code", user["language"])}',
+                             'value': '@enter_redeem_code'},
+                        ] if user['parent'] is not None else [{'label': f'{translate("my_redeem_code", user["language"])}', 'value': '@my_redeem_code'}])
+                    ]
+                    json = {
+                        'chat_id': uid,
+                        'text': msg,
+                        'reply_markup': {
+                            'inline_keyboard': keyboard
+                        }
+                    }
+                    send_message(json)
+                    pass
+                elif callback_data == '@my_redeem_code':
+                    redeem_code = generate_key(f'{uid}@{user["username"]}')
+                    json = {
+                        'chat_id': uid,
+                        'text': f'`{redeem_code}`',
+                    }
+                    send_message(json)
+                    pass
+                elif callback_data == '@enter_redeem_code':
+                    user['last_action'] = 'enter_redeem_code'
+                    json = {
+                        'chat_id': uid,
+                        'text': f'{translate("enter_redeem_code", user["language"])}',
+                    }
+                    send_message(json)
                     pass
                 elif callback_data == '@contact_admin':
                     user['last_action'] = 'contact_admin'
@@ -633,6 +665,36 @@ def generate_response(data):
                         'parse_mode': 'markdown',
                     }
                     return send_message(json)
+                elif user['last_action'] == 'enter_redeem_code':
+                    user['last_action'] = None
+                    cache_up(uid, user)
+                    if user['parent'] is not None:
+                        json = {
+                            'chat_id': uid,
+                            'text': f'{translate("disabled_redeem_code", user["language"])}',
+                        }
+                        return send_message(json)
+
+                    parent_user_id, _ = verify_key(text)
+                    parent_user = find_one('users', {'id': parent_user_id})
+
+                    if parent_user is not None:
+
+                        update_one('users', {'id': uid}, {
+                            'parent': parent_user_id
+                        })
+                        json = {
+                            'chat_id': uid,
+                            'text': f'{translate("valid_redeem_code", user["language"])}',
+                        }
+                        return send_message(json)
+                    else:
+                        json = {
+                            'chat_id': uid,
+                            'text': f'{translate("no_valid_redeem_code", user["language"])}',
+                        }
+                        return send_message(json)
+                    pass
                 elif user['last_action'] == 'contact_admin':
                     json = {
                         'chat_id': ADMIN_USER_ID,

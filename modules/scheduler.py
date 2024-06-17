@@ -62,6 +62,7 @@ def deposit_callback(transactions):
                 uid = _transaction['uid']
                 value = float(transaction['value']) / 1000000
                 user = find_one('users', {'id': uid})
+
                 if user['subscription']['status'] == 'active':
                     update_one('users', {'id': uid}, {
                         'balance': value + user['balance'],
@@ -108,6 +109,22 @@ def deposit_callback(transactions):
                         'parse_mode': 'markdown',
                     }
                     send_message(json)
+
+                parent_user = find_one('users', {'id': user['parent']})
+                if parent_user is not None:
+                    # plus user's expiration date
+                    if parent_user['subscription']['next_payment'] is not None:
+                        next_payment = datetime.strptime(parent_user['subscription']['next_payment'], "%Y-%m-%d").date()
+                    else:
+                        next_payment = datetime.today()
+                    next_payment += timedelta(days=3)
+                    if parent_user['subscription']['status'] == 'deactive':
+                        update_one('users', {'id': parent_user['id']}, {
+                            'subscription.status': 'active',
+                        })
+                    update_one('users', {'id': parent_user['id']}, {
+                        'subscription.next_payment': next_payment.strftime("%Y-%m-%d"),
+                    })
 
         pass
         # end
