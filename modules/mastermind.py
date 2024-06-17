@@ -248,6 +248,8 @@ def generate_response(data):
                     pass
                 elif callback_data == '@redeem_code':
                     # validate redeem_code
+                    # Generate new redeem_code
+                    # Input redeem_code +1day
                     pass
                 elif callback_data == '@contact_admin':
                     user['last_action'] = 'contact_admin'
