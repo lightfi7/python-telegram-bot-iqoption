@@ -256,7 +256,7 @@ def generate_response(data):
                             {'label': f'{translate("my_redeem_code", user["language"])}', 'value': '@my_redeem_code'},
                             {'label': f'{translate("enter_redeem_code", user["language"])}',
                              'value': '@enter_redeem_code'},
-                        ] if user['parent'] is not None else [{'label': f'{translate("my_redeem_code", user["language"])}', 'value': '@my_redeem_code'}])
+                        ] if user['parent'] is None else [{'label': f'{translate("my_redeem_code", user["language"])}', 'value': '@my_redeem_code'}])
                     ]
                     json = {
                         'chat_id': uid,
