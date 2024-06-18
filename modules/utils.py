@@ -34,4 +34,4 @@ def generate_key(v):
 def verify_key(token):
     cipher = AES.new(key, AES.MODE_CFB, iv)
     decrypted_str = cipher.decrypt(token)
-    return decrypted_str.decode('utf-8').split("@")
+    return decrypted_str.decode('utf-8')
