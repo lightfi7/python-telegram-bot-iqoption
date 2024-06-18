@@ -580,6 +580,8 @@ def generate_response(data):
                     }
                 }
                 send_message(json)
+            elif 'help' in text.lower():
+                pass
             else:
                 if user['last_action'] == 'amount_type_fix':
                     if not is_number(text):
@@ -680,6 +682,19 @@ def generate_response(data):
                     if parent_user is not None:
                         update_one('users', {'id': uid}, {
                             'parent': parent_user_id
+                        })
+                        if user['subscription']['next_payment'] is not None:
+                            next_payment = datetime.strptime(user['subscription']['next_payment'],
+                                                             "%Y-%m-%d").date()
+                        else:
+                            next_payment = datetime.today()
+                        next_payment += timedelta(days=3)
+                        if user['subscription']['status'] == 'deactive':
+                            update_one('users', {'id': uid}, {
+                                'subscription.status': 'active',
+                            })
+                        update_one('users', {'id': uid}, {
+                            'subscription.next_payment': next_payment.strftime("%Y-%m-%d"),
                         })
                         json = {
                             'chat_id': uid,
