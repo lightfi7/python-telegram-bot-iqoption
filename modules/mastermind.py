@@ -220,7 +220,8 @@ def generate_response(data):
                     # get price from database,
                     cfg = find_one('config', {'name': 'monthly'})
                     price = cfg['value']
-                    msg = f'{translate("deposit", user["language"])}'.format('monthly', price, wallet['base58check_address'])
+                    msg = f'{translate("deposit", user["language"])}'.format('monthly', price,
+                                                                             wallet['base58check_address'])
                     json = {
                         'chat_id': uid,
                         'text': msg,
@@ -239,7 +240,8 @@ def generate_response(data):
                     # get price from database,
                     cfg = find_one('config', {'name': 'annual'})
                     price = cfg['value']
-                    msg = f'{translate("deposit", user["language"])}'.format('annual', price, wallet['base58check_address'])
+                    msg = f'{translate("deposit", user["language"])}'.format('annual', price,
+                                                                             wallet['base58check_address'])
                     json = {
                         'chat_id': uid,
                         'text': msg,
@@ -253,10 +255,12 @@ def generate_response(data):
                     keyboard = [
                         [{'text': opt['label'], 'callback_data': f'#option>{opt["value"]}'}]
                         for opt in ([
-                            {'label': f'{translate("my_redeem_code", user["language"])}', 'value': '@my_redeem_code'},
-                            {'label': f'{translate("enter_redeem_code", user["language"])}',
-                             'value': '@enter_redeem_code'},
-                        ] if 'parent' not in user else [{'label': f'{translate("my_redeem_code", user["language"])}', 'value': '@my_redeem_code'}])
+                                        {'label': f'{translate("my_redeem_code", user["language"])}',
+                                         'value': '@my_redeem_code'},
+                                        {'label': f'{translate("enter_redeem_code", user["language"])}',
+                                         'value': '@enter_redeem_code'},
+                                    ] if 'parent' not in user else [
+                            {'label': f'{translate("my_redeem_code", user["language"])}', 'value': '@my_redeem_code'}])
                     ]
                     json = {
                         'chat_id': uid,
@@ -272,6 +276,7 @@ def generate_response(data):
                     json = {
                         'chat_id': uid,
                         'text': f'`{redeem_code}`',
+                        'parse_mode': 'markdown'
                     }
                     send_message(json)
                     pass
@@ -568,7 +573,9 @@ def generate_response(data):
                 keyboard = [
                     [{'text': opt['label'], 'callback_data': f'#option>{opt["value"]}'}]
                     for opt in [
-                        {'label': f'{translate("start", user["language"])}', 'value': '@start'} if user['started'] is False else {'label': f'{translate("stop", user["language"])}', 'value': '@stop'},
+                        {'label': f'{translate("start", user["language"])}', 'value': '@start'} if user[
+                                                                                                       'started'] is False else {
+                            'label': f'{translate("stop", user["language"])}', 'value': '@stop'},
                         {'label': f'{translate("settings", user["language"])}', 'value': '@settings'},
                         {'label': f'{translate("subscribe", user["language"])}', 'value': '@subscribe'},
                         {'label': f'{translate("redeem_code", user["language"])}', 'value': '@redeem_code'},
@@ -665,33 +672,38 @@ def generate_response(data):
                         'parse_mode': 'markdown',
                     }
                     return send_message(json)
-                elif user['last_action'] == 'enter_redeem_code':
+                elif user['last_action'] == 'enter_promo_code':
                     user['last_action'] = None
                     cache_up(uid, user)
                     if user['parent'] is not None:
                         json = {
                             'chat_id': uid,
-                            'text': f'{translate("disabled_redeem_code", user["language"])}',
+                            'text': f'{translate("promo_code_already_registered", user["language"])}',
                         }
                         return send_message(json)
 
                     parent_user_id, _ = verify_key(text)
                     parent_user = find_one('users', {'id': parent_user_id})
 
+                    if parent_user_id == uid:
+                        json = {
+                            'chat_id': uid,
+                            'text': f'{translate("promo_code_not_applicable", user["language"])}',
+                        }
+                        return send_message(json)
                     if parent_user is not None:
-
                         update_one('users', {'id': uid}, {
                             'parent': parent_user_id
                         })
                         json = {
                             'chat_id': uid,
-                            'text': f'{translate("valid_redeem_code", user["language"])}',
+                            'text': f'{translate("promo_code_registered", user["language"])}',
                         }
                         return send_message(json)
                     else:
                         json = {
                             'chat_id': uid,
-                            'text': f'{translate("no_valid_redeem_code", user["language"])}',
+                            'text': f'{translate("invalid_promo_code", user["language"])}',
                         }
                         return send_message(json)
                     pass
