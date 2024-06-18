@@ -541,6 +541,7 @@ def generate_response(data):
         elif t == 'message':
             uid = query['from']['id']
             text = query['text']
+            print(text)
             user = cached(uid, {
                 'id': uid,
                 'username': query['from']['username'],
