@@ -672,7 +672,7 @@ def generate_response(data):
                         'parse_mode': 'markdown',
                     }
                     return send_message(json)
-                elif user['last_action'] == 'enter_promo_code':
+                elif user['last_action'] == 'register_redeem_code':
                     user['last_action'] = None
                     cache_up(uid, user)
                     if user['parent'] is not None:
