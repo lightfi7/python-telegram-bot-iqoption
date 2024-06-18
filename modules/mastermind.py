@@ -272,7 +272,7 @@ def generate_response(data):
                     send_message(json)
                     pass
                 elif callback_data == '@my_redeem_code':
-                    redeem_code = generate_key(f'{uid}@{user["username"]}')
+                    redeem_code = generate_key(f'{uid}')
                     json = {
                         'chat_id': uid,
                         'text': f'`{redeem_code}`',
@@ -682,7 +682,7 @@ def generate_response(data):
                             'text': f'{translate("promo_code_already_registered", user["language"])}',
                         }
                         return send_message(json)
-                    parent_user_id, _ = verify_key(text)
+                    parent_user_id = int(verify_key(text))
                     if parent_user_id == uid:
                         json = {
                             'chat_id': uid,
