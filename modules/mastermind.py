@@ -284,7 +284,7 @@ def generate_response(data):
                     user['last_action'] = 'register_redeem_code'
                     json = {
                         'chat_id': uid,
-                        'text': f'{translate("enter_redeem_code", user["language"])}',
+                        'text': f'{translate("enter_promo_code", user["language"])}',
                     }
                     send_message(json)
                     pass
@@ -681,10 +681,8 @@ def generate_response(data):
                             'text': f'{translate("promo_code_already_registered", user["language"])}',
                         }
                         return send_message(json)
-
                     parent_user_id, _ = verify_key(text)
                     parent_user = find_one('users', {'id': parent_user_id})
-
                     if parent_user_id == uid:
                         json = {
                             'chat_id': uid,
