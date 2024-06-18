@@ -675,20 +675,20 @@ def generate_response(data):
                 elif user['last_action'] == 'register_redeem_code':
                     user['last_action'] = None
                     cache_up(uid, user)
-                    if 'parent' not in user:
+                    if 'parent' in user:
                         json = {
                             'chat_id': uid,
                             'text': f'{translate("promo_code_already_registered", user["language"])}',
                         }
                         return send_message(json)
                     parent_user_id, _ = verify_key(text)
-                    parent_user = find_one('users', {'id': parent_user_id})
                     if parent_user_id == uid:
                         json = {
                             'chat_id': uid,
                             'text': f'{translate("promo_code_not_applicable", user["language"])}',
                         }
                         return send_message(json)
+                    parent_user = find_one('users', {'id': parent_user_id})
                     if parent_user is not None:
                         update_one('users', {'id': uid}, {
                             'parent': parent_user_id
