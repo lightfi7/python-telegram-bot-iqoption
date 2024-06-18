@@ -33,7 +33,7 @@ def generate_key(v):
 
 def verify_key(token):
     cipher = AES.new(key, AES.MODE_CFB, iv)
-    decrypted_str = cipher.decrypt(token.encode('utf-8'))
+    decrypted_str = cipher.decrypt(token.decode('utf-8'))
     print(decrypted_str)
     str = decrypted_str.decode('utf-8')
     print(str)
