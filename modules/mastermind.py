@@ -257,8 +257,8 @@ def generate_response(data):
                         for opt in ([
                                         {'label': f'{translate("my_redeem_code", user["language"])}',
                                          'value': '@my_redeem_code'},
-                                        {'label': f'{translate("enter_redeem_code", user["language"])}',
-                                         'value': '@enter_redeem_code'},
+                                        {'label': f'{translate("register_redeem_code", user["language"])}',
+                                         'value': '@register_redeem_code'},
                                     ] if 'parent' not in user else [
                             {'label': f'{translate("my_redeem_code", user["language"])}', 'value': '@my_redeem_code'}])
                     ]
@@ -280,8 +280,8 @@ def generate_response(data):
                     }
                     send_message(json)
                     pass
-                elif callback_data == '@enter_redeem_code':
-                    user['last_action'] = 'enter_redeem_code'
+                elif callback_data == '@register_redeem_code':
+                    user['last_action'] = 'register_redeem_code'
                     json = {
                         'chat_id': uid,
                         'text': f'{translate("enter_redeem_code", user["language"])}',
