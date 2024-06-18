@@ -143,7 +143,6 @@ def wallet_checker():
                     trx_balance = tron_client.get_balance(wallet['base58check_address'])
                     trc20_balance = tron_client.get_trc20_balance(wallet['base58check_address'])
                     admin_trx_balance = tron_client.get_balance(admin_wallet['base58check_address'])
-                    print(trx_balance, trc20_balance, admin_trx_balance)
                     # check
                     if trc20_balance > 0:
                         if trx_balance < 40:

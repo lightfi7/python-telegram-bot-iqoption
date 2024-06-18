@@ -9,7 +9,6 @@ def send_message(json_data):
     try:
         print(f'https://api.telegram.org/bot{BOT_TOKEN}/sendmessage')
         response = requests.post(f'https://api.telegram.org/bot{BOT_TOKEN}/sendmessage', json=json_data)
-        print(response.text)
         return response.json()
     except Exception as e:
         print(e)

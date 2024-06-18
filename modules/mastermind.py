@@ -13,7 +13,6 @@ ADMIN_USER_ID = os.getenv('ADMIN_USER_ID', 6343801713)
 
 
 def parse_data(data):
-    print(data)
     if 'callback_query' in data:
         return 'callback_query', data['callback_query']
     elif 'result' in data:
@@ -40,16 +39,8 @@ def parse_channel_post(data):
         second_time = match.group(6)
         third_time = match.group(7)
 
-        print("UTC Offset:", utc_offset)
-        print("Symbol:", symbol)
-        print("Time:", first_time)
-        print("Option:", option)
-        print("Protection 1:", second_time)
-        print("Protection 2:", third_time)
-
         return utc_offset, symbol, first_time, option, second_time, third_time
     else:
-        print("no match found.")
         return None, None, None, None, None, None
 
 
@@ -473,10 +464,8 @@ def generate_response(data):
             elif callback_type == '#confirm':
                 if callback_data == '@yes':
                     if user['last_action'] == 'start':
-                        print('Started')
                         user['started'] = True
                     if user['last_action'] == 'stop':
-                        print('Stopped')
                         user['started'] = False
                     user['last_action'] = None
                     cache_up(uid, user)
@@ -499,7 +488,6 @@ def generate_response(data):
         elif t == 'result':
             pass
         elif t == 'channel_post':
-            print(cache.keys())
             for uid in cache.keys():
                 user = cache[uid]
                 if user['perm'] == 'guest' or user['started'] is not True:
@@ -541,7 +529,6 @@ def generate_response(data):
         elif t == 'message':
             uid = query['from']['id']
             text = query['text']
-            print(f'=>{text}')
             user = cached(uid, {
                 'id': uid,
                 'username': query['from']['username'],
@@ -594,7 +581,6 @@ def generate_response(data):
                 }
                 send_message(json)
             else:
-                print(user)
                 if user['last_action'] == 'amount_type_fix':
                     if not is_number(text):
                         json = {
