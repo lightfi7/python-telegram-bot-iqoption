@@ -35,6 +35,6 @@ def verify_key(token):
     cipher = AES.new(key, AES.MODE_CFB, iv)
     decrypted_str = cipher.decrypt(token)
     print(decrypted_str)
-    str =  decrypted_str.decode('utf-8')
+    str = decrypted_str.decode('utf-8')
     print(str)
     return str

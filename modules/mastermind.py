@@ -682,9 +682,9 @@ def generate_response(data):
                             'text': f'{translate("promo_code_already_registered", user["language"])}',
                         }
                         return send_message(json)
-                    print('=>')
+                    print(f'=> {text}')
                     parent_user_id = int(verify_key(text))
-                    print('=>')
+                    print(f'=>')
                     if parent_user_id == uid:
                         json = {
                             'chat_id': uid,
