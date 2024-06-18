@@ -4,14 +4,14 @@ from tronpy.keys import PrivateKey
 from datetime import datetime, timedelta
 import time
 
-TRONWEB_API_KEY = "your_api_key_here"
-# USDT_CONTRACT_ADDRESS = "TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t"  # Ensure this is correct for the network you're using
-USDT_CONTRACT_ADDRESS = "TXLAQ63Xg1NAzckPwKHvzw7CSEmLMEqcdj"  # Ensure this is correct for the network you're using
+TRONWEB_API_KEY = "4305d79d-2d54-4cd1-9134-3b8be500692d"
+USDT_CONTRACT_ADDRESS = "TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t"  # Ensure this is correct for the network you're using
+# USDT_CONTRACT_ADDRESS = "TXLAQ63Xg1NAzckPwKHvzw7CSEmLMEqcdj"  # Ensure this is correct for the network you're using
 
 
 class TronClient:
     def __init__(self):
-        self.tron = Tron(network='nile')
+        self.tron = Tron()
         self.private_key = None
 
     def set_private_key(self, private_key):
