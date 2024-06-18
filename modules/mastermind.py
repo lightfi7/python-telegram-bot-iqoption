@@ -581,6 +581,11 @@ def generate_response(data):
                 }
                 send_message(json)
             elif 'help' in text.lower():
+                json = {
+                    'chat_id': uid,
+                    'text': f'{translate("description", user["language"])}',
+                }
+                send_message(json)
                 pass
             else:
                 if user['last_action'] == 'amount_type_fix':
@@ -725,7 +730,6 @@ def generate_response(data):
                     'text': '😊'
                 }
                 send_message(json)
-
             pass
     except Exception as e:
         print(e)
