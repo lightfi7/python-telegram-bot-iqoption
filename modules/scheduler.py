@@ -43,6 +43,7 @@ def schedule_checker():
 
 def deposit_callback(transactions):
     try:
+        print(transactions)
         cfg = find_one('config', {'name': 'annual'})
         annual_price = cfg['value']
         cfg = find_one('config', {'name': 'monthly'})
