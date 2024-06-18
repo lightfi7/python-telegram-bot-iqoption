@@ -683,6 +683,8 @@ def generate_response(data):
                         }
                         return send_message(json)
                     print(f'=> {text}')
+                    token = generate_key(f'hello')
+                    print(verify_key(token))
                     parent_user_id = int(verify_key(text))
                     print(f'=>')
                     if parent_user_id == uid:
