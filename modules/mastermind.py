@@ -675,7 +675,7 @@ def generate_response(data):
                 elif user['last_action'] == 'register_redeem_code':
                     user['last_action'] = None
                     cache_up(uid, user)
-                    if user['parent'] is not None:
+                    if 'parent' not in user:
                         json = {
                             'chat_id': uid,
                             'text': f'{translate("promo_code_already_registered", user["language"])}',
