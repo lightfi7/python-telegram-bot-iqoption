@@ -176,7 +176,7 @@ def payment_checker():
             # membership checker
             update_many('users', {
                 'subscription.next_payment': {
-                    '$lt': datetime.today().strftime('%y-%m-%d')
+                    '$lt': datetime.today().strftime('%Y-%m-%d')
                 }
             }, {
                 'subscription.status': 'deactive',
