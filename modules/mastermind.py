@@ -293,6 +293,7 @@ def generate_response(data):
                     json = {
                         'chat_id': uid,
                         'text': f'{translate("manual", user["language"])}',
+                        'parse_mode': 'markdown'
                     }
                     send_message(json)
                     pass
