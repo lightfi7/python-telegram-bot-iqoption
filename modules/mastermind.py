@@ -683,10 +683,6 @@ def generate_response(data):
                         }
                         return send_message(json)
                     parent_user_id, _ = verify_key(text)
-                    send_message({
-                        'chat_id': uid,
-                        'text': parent_user_id,
-                    })
                     if parent_user_id == uid:
                         json = {
                             'chat_id': uid,
