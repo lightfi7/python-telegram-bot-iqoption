@@ -580,7 +580,7 @@ def generate_response(data):
                     }
                 }
                 send_message(json)
-            elif 'help' in text.lower():
+            elif 'about' in text.lower():
                 json = {
                     'chat_id': uid,
                     'text': f'{translate("description", user["language"])}',
