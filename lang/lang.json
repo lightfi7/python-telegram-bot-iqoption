@@ -27,6 +27,7 @@
     "annual": "📆 Annual",
     "deposit": "💳 Hello valued subscriber! This is a reminder about maintaining your active subscription status for {}. To keep your account in good standing, please deposit ${} to the following address: {}.",
     "subscribed": "✅ Your subscription is active on the {} plan.",
+    "subscription_expiry": "Your `{}` subscription is active until `{}`",
     "enter_promo_code": "🎟️ Please enter the promo code...",
     "invalid_promo_code": "❌ Invalid promo code.",
     "promo_code_not_applicable": "⚠️ This promo code is not applicable.",

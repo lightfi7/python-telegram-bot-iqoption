@@ -181,8 +181,11 @@ def generate_response(data):
                     edit_message(json)
                     pass
                 elif callback_data == '@subscribe':
-
-                    msg = f' {translate("choose_plan", user["language"])}'
+                    msg = ''
+                    if user['subscription']['status'] == 'active':
+                        msg += f'{translate("subscription_expiry", user["language"])}\n'.format(user['subscription']['plan'], user['subscription']['next_payment'])
+                        pass
+                    msg += f'{translate("choose_plan", user["language"])}'
                     keyboard = [
                         [{'text': opt['label'], 'callback_data': f'#option>{opt["value"]}'}]
                         for opt in [
@@ -698,6 +701,8 @@ def generate_response(data):
                         if user['subscription']['status'] == 'deactive':
                             update_one('users', {'id': uid}, {
                                 'subscription.status': 'active',
+                                'subscription.plan': 'trial',
+                                'subscription.start_date': datetime.today().strftime("%Y-%m-%d"),
                             })
                         update_one('users', {'id': uid}, {
                             'subscription.next_payment': next_payment.strftime("%Y-%m-%d"),
