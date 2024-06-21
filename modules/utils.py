@@ -33,5 +33,6 @@ def generate_key(v):
 
 def verify_key(token):
     cipher = AES.new(key, AES.MODE_CFB, iv)
-    decrypted_str = cipher.decrypt(token)
+    buff = token.decode('utf-8')
+    decrypted_str = cipher.decrypt(buff)
     return decrypted_str.decode('utf-8')
