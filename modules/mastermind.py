@@ -13,7 +13,6 @@ ADMIN_USER_ID = os.getenv('ADMIN_USER_ID', 6343801713)
 
 
 def parse_data(data):
-    print(data)
     if 'callback_query' in data:
         return 'callback_query', data['callback_query']
     elif 'result' in data:
@@ -534,6 +533,7 @@ def generate_response(data):
         elif t == 'message':
             uid = query['from']['id']
             text = query['text']
+            print(text)
             user = cached(uid, {
                 'id': uid,
                 'username': query['from']['username'],
