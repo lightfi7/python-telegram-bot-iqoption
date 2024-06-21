@@ -730,7 +730,7 @@ def generate_response(data):
                 # })
                 token = generate_key(f'{uid}')
                 print(token)
-                print(verify_key(token))
+                print(verify_key(bytes.fromhex(token)))
 
                 json = {
                     'chat_id': uid,
