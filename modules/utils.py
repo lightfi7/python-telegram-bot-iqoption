@@ -28,12 +28,11 @@ def is_valid_email(email):
 
 def generate_key(v):
     cipher = AES.new(key, AES.MODE_CFB, iv)
-    encrypted = cipher.encrypt(v.encode('utf-8'))
-    return encrypted.hex()  # Return hexadecimal representation
+    return ''.join(f'{byte:02X}' for byte in cipher.encrypt(v.encode('utf-8')))
 
 
 def verify_key(token):
     cipher = AES.new(key, AES.MODE_CFB, iv)
-    encrypted = bytes.fromhex(token)  # Convert hex string back to bytes
-    decrypted = cipher.decrypt(encrypted)
-    return decrypted.decode('utf-8')
+    buff = bytes.fromhex(token)
+    decrypted_bytes = cipher.decrypt(buff)
+    return decrypted_bytes.decode('utf-8')
