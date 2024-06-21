@@ -715,6 +715,8 @@ def generate_response(data):
                         return send_message(json)
                     pass
                 elif user['last_action'] == 'contact_admin':
+                    user['last_action'] = None
+                    cache_up(uid, user)
                     json = {
                         'chat_id': ADMIN_USER_ID,
                         'text': f'`{user["username"]}`:\n'
