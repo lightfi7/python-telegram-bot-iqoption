@@ -728,6 +728,10 @@ def generate_response(data):
                 #     'chat_id': uid,
                 #     'message_id': query['message_id'],
                 # })
+                token = generate_key(f'{uid}')
+                print(token)
+                print(verify_key(token))
+
                 json = {
                     'chat_id': uid,
                     'text': '😊'

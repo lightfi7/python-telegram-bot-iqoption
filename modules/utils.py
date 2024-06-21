@@ -1,4 +1,3 @@
-import binascii
 import re
 from Crypto import Random
 from Crypto.Cipher import AES
@@ -29,12 +28,10 @@ def is_valid_email(email):
 
 def generate_key(v):
     cipher = AES.new(key, AES.MODE_CFB, iv)
-    encrypted_bytes = cipher.encrypt(v.encode('utf-8'))
-    return binascii.hexlify(encrypted_bytes).decode('utf-8')
+    return ''.join(f'{byte:02X}' for byte in cipher.encrypt(v.encode('utf-8')))
 
 
 def verify_key(token):
     cipher = AES.new(key, AES.MODE_CFB, iv)
-    encrypted_bytes = binascii.unhexlify(token)
-    decrypted_bytes = cipher.decrypt(encrypted_bytes)
+    decrypted_bytes = cipher.decrypt(token)
     return decrypted_bytes.decode('utf-8')
