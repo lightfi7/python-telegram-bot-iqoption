@@ -693,6 +693,9 @@ def generate_response(data):
                         update_one('users', {'id': uid}, {
                             'parent': parent_user_id
                         })
+                        update_one('users', {'id': parent_user_id}, {
+                            'team_count': parent_user['team_count']+1,
+                        })
                         if user['subscription']['next_payment'] is not None:
                             next_payment = datetime.strptime(user['subscription']['next_payment'],
                                                              "%Y-%m-%d").date()
