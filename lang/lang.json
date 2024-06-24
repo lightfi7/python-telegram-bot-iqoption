@@ -16,7 +16,7 @@
     "account_registered": "🎉 Congratulations! Your account has been registered successfully.",
     "send_me_message": "💬 Please send me a message with your request or feedback.",
     "no_subscription": "⚠️ It seems you don't have an active subscription. \nPlease /subscribe to start using the bot.",
-    "register_account": "📝 Please register your account to access the bot's features.",
+    "register_account": "📝 Please register your account to access the bot's features.\nIf you don't have account in iqoption, please sign up here https://iqoption.com/en/register",
     "scheduled": "⏰ Your bot will start trading at {} in UTC-{}.",
     "stopped": "🛑 Your bot has been stopped. You can restart it anytime.",
     "started": "🚀 Your bot is now active and ready for trading.",
