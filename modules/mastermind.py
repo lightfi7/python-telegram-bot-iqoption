@@ -274,21 +274,21 @@ def generate_response(data):
                     send_message(json)
                     pass
                 elif callback_data == '@register_redeem_code':
-                    user['last_action'] = 'register_redeem_code'
-                    u = cache_up(uid, user)
                     json = {
                         'chat_id': uid,
                         'text': f'{translate("enter_promo_code", user["language"])}',
                     }
+                    user['last_action'] = 'register_redeem_code'
+                    u = cache_up(uid, user)
                     send_message(json)
                     pass
                 elif callback_data == '@contact_admin':
-                    user['last_action'] = 'contact_admin'
-                    u = cache_up(uid, user)
                     json = {
                         'chat_id': uid,
                         'text': f' {translate("send_me_message", user["language"])}',
                     }
+                    user['last_action'] = 'contact_admin'
+                    u = cache_up(uid, user)
                     send_message(json)
                     pass
                 elif callback_data == '@help':
@@ -363,36 +363,36 @@ def generate_response(data):
                     send_message(json)
                     pass
                 elif callback_data == '@real_account':
-                    user['last_action'] = 'account_email'
-                    user['settings']['account']['type'] = 0
-                    u = cache_up(uid, user)
                     json = {
                         'chat_id': uid,
                         'text': f'{translate("set_account_type_real", user["language"])}',
                         'parse_mode': 'markdown'
                     }
+                    user['last_action'] = 'account_email'
+                    user['settings']['account']['type'] = 0
+                    u = cache_up(uid, user)
                     send_message(json)
                     pass
                 elif callback_data == '@practice_account':
-                    user['last_action'] = 'account_email'
-                    user['settings']['account']['type'] = 1
-                    u = cache_up(uid, user)
                     json = {
                         'chat_id': uid,
                         'text': f'{translate("set_account_type_practice", user["language"])}',
                         'parse_mode': 'markdown'
                     }
+                    user['last_action'] = 'account_email'
+                    user['settings']['account']['type'] = 1
+                    u = cache_up(uid, user)
                     send_message(json)
                     pass
                 elif callback_data == '@fix_amount':
-                    user['settings']['amount']['type'] = 0
-                    user['last_action'] = 'amount_type_fix'
-                    u = cache_up(uid, user)
                     # amount
                     json = {
                         'chat_id': uid,
                         'text': f'{translate("enter_fix_amount", user["language"])}',
                     }
+                    user['settings']['amount']['type'] = 0
+                    user['last_action'] = 'amount_type_fix'
+                    u = cache_up(uid, user)
                     send_message(json)
                     pass
                 elif callback_data == '@percent_balance':
@@ -470,23 +470,23 @@ def generate_response(data):
                         user['started'] = True
                     if user['last_action'] == 'stop':
                         user['started'] = False
-                    user['last_action'] = None
-                    u = cache_up(uid, user)
                     msg = f'{translate("started", user["language"])}'
                     json = {
                         'chat_id': uid,
                         'text': msg,
                         'message_id': query['message']['message_id'],
                     }
-                    edit_message(json)
-                elif callback_data == '@no':
                     user['last_action'] = None
                     u = cache_up(uid, user)
+                    edit_message(json)
+                elif callback_data == '@no':
                     msg = f'{translate("stopped", user["language"])}'
                     json = {
                         'chat_id': uid,
                         'text': msg,
                     }
+                    user['last_action'] = None
+                    u = cache_up(uid, user)
                     send_message(json)
         elif t == 'result':
             pass
@@ -600,14 +600,14 @@ def generate_response(data):
                             'parse_mode': 'markdown'
                         }
                         return send_message(json)
-                    user['settings']['amount']['value'] = int(text)
-                    user['last_action'] = None
-                    u = cache_up(uid, user)
                     json = {
                         'chat_id': uid,
                         'text': f'{translate("fix_amount_set", user["language"])}'.format(text),
                         'parse_mode': 'markdown',
                     }
+                    user['settings']['amount']['value'] = int(text)
+                    user['last_action'] = None
+                    u = cache_up(uid, user)
                     return send_message(json)
                 elif user['last_action'] == 'amount_type_percent':
                     if not is_number(text):
@@ -617,45 +617,44 @@ def generate_response(data):
                             'parse_mode': 'markdown'
                         }
                         return send_message(json)
-                    user['settings']['amount']['value'] = int(text)
-                    user['last_action'] = None
-                    u = cache_up(uid, user)
                     json = {
                         'chat_id': uid,
                         'text': f'{translate("percent_balance_set", user["language"])}'.format(
                             text),
                         'parse_mode': 'markdown',
                     }
+                    user['settings']['amount']['value'] = int(text)
+                    user['last_action'] = None
+                    u = cache_up(uid, user)
                     return send_message(json)
                 elif user['last_action'] == 'account_email':
-                    if not is_valid_email(text):
+                    if is_valid_email(text) is False:
                         json = {
                             'chat_id': uid,
                             'text': f'{translate("invalid_email", user["language"])}',
                             'parse_mode': 'markdown'
                         }
                         return send_message(json)
-                    user['last_action'] = 'account_password'
-                    user['settings']['account']['email'] = text
-                    u = cache_up(uid, user)
                     json = {
                         'chat_id': uid,
                         'text': f'{translate("register_email", user["language"])}',
                         'parse_mode': 'markdown'
                     }
+                    user['last_action'] = 'account_password'
+                    user['settings']['account']['email'] = text
+                    u = cache_up(uid, user)
                     return send_message(json)
                 elif user['last_action'] == 'account_password':
                     if user['settings']['account']['email'] is not None:
                         user['settings']['account']['password'] = text
                     else:
-                        user['last_action'] = 'account_email'
-                        u = cache_up(uid, user)
-                        return send_message({
+                        json={
                             'chat_id': uid,
                             'text': f'{translate("account_not_found", user["language"])}\n{translate("enter_account_email", user["language"])}'
-                        })
-                    user['last_action'] = None
-                    u = cache_up(uid, user)
+                        }
+                        user['last_action'] = 'account_email'
+                        u = cache_up(uid, user)
+                        return send_message(json)
                     delete_message({
                         'chat_id': uid,
                         'message_id': query['message_id'],
@@ -670,10 +669,11 @@ def generate_response(data):
                         'text': f'{translate("account_registered", user["language"])}\n',
                         'parse_mode': 'markdown',
                     }
-                    return send_message(json)
-                elif user['last_action'] == 'register_redeem_code':
                     user['last_action'] = None
                     u = cache_up(uid, user)
+                    return send_message(json)
+                elif user['last_action'] == 'register_redeem_code':
+
                     if 'parent' in user:
                         json = {
                             'chat_id': uid,
@@ -714,6 +714,8 @@ def generate_response(data):
                             'chat_id': uid,
                             'text': f'{translate("promo_code_registered", user["language"])}',
                         }
+                        user['last_action'] = None
+                        u = cache_up(uid, user)
                         return send_message(json)
                     else:
                         json = {
@@ -723,24 +725,24 @@ def generate_response(data):
                         return send_message(json)
                     pass
                 elif user['last_action'] == 'contact_admin':
-                    user['last_action'] = None
-                    u = cache_up(uid, user)
                     json = {
                         'chat_id': ADMIN_USER_ID,
                         'text': f'`{user["username"]}`:\n'
                                 f'\"{text}\"',
                         'parse_mode': 'markdown'
                     }
+                    user['last_action'] = None
+                    u = cache_up(uid, user)
                     return send_message(json)
                 # delete_message({
                 #     'chat_id': uid,
                 #     'message_id': query['message_id'],
                 # })
-                json = {
-                    'chat_id': uid,
-                    'text': '😊'
-                }
-                send_message(json)
+                # json = {
+                #     'chat_id': uid,
+                #     'text': '😊'
+                # }
+                # send_message(json)
             pass
     except Exception as e:
         print(e)
