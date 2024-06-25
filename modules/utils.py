@@ -19,12 +19,12 @@ def is_number(str):
 
 
 def is_valid_email(email):
-    regex = r'^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w+$'
-    if re.match(regex, email):
-        return True
-    else:
-        return False
-
+    # regex = r'^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w+$'
+    # if re.match(regex, email):
+    #     return True
+    # else:
+    #     return False
+    return True
 
 def generate_key(v):
     cipher = AES.new(key, AES.MODE_CFB, iv)
