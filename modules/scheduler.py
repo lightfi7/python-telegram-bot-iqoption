@@ -196,7 +196,7 @@ def payment_checker():
 
 
 def start():
-    # threading.Thread(target=schedule_checker, args=(), daemon=True).start()
+    threading.Thread(target=schedule_checker, args=(), daemon=True).start()
     threading.Thread(target=payment_checker, args=(), daemon=True).start()
     # threading.Thread(target=wallet_checker, args=(), daemon=True).start()
     pass

@@ -768,11 +768,11 @@ def generate_response(data):
                 #     'chat_id': uid,
                 #     'message_id': query['message_id'],
                 # })
-                # json = {
-                #     'chat_id': uid,
-                #     'text': '😊'
-                # }
-                # send_message(json)
+                json = {
+                    'chat_id': uid,
+                    'text': '😊'
+                }
+                send_message(json)
             pass
     except Exception as e:
         print(e)
