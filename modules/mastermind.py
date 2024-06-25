@@ -103,8 +103,6 @@ def generate_response(data):
                         }
                         return send_message(json)
                     # check amount, strategy
-                    user['last_action'] = 'start'
-                    u = cache_up(uid, user)
                     amount = f'{user["settings"]["amount"]["value"]}{"%" if user["settings"]["amount"]["type"] == 1 else ""}'
                     strategy = translate('without_martin_gale', user['language'])
                     if user['settings']['strategy'] == 1:
@@ -132,12 +130,12 @@ def generate_response(data):
                             'inline_keyboard': keyboard
                         }
                     }
+                    user['last_action'] = 'start'
+                    u = cache_up(uid, user)
                     edit_message(json)
                     pass
                 elif callback_data == '@stop':
                     # yes/no
-                    user['last_action'] = 'stop'
-                    u = cache_up(uid, user)
                     msg = f'Do you want to stop bot?'
                     keyboard = [
                         [{'text': opt['label'], 'callback_data': f'@confirm>{opt["value"]}'} for opt in opts]
@@ -157,6 +155,8 @@ def generate_response(data):
                             'inline_keyboard': keyboard
                         }
                     }
+                    user['last_action'] = 'stop'
+                    u = cache_up(uid, user)
                     edit_message(json)
                     pass
                 elif callback_data == '@settings':
@@ -178,6 +178,8 @@ def generate_response(data):
                             'inline_keyboard': keyboard
                         }
                     }
+                    user['last_action'] = None
+                    u = cache_up(uid, user)
                     edit_message(json)
                     pass
                 elif callback_data == '@subscribe':
@@ -200,6 +202,8 @@ def generate_response(data):
                             'inline_keyboard': keyboard
                         }
                     }
+                    user['last_action'] = None
+                    u = cache_up(uid, user)
                     send_message(json)
                     pass
                 elif callback_data == '@monthly':
@@ -220,6 +224,8 @@ def generate_response(data):
                         'text': msg,
                         'parse_mode': 'markdown'
                     }
+                    user['last_action'] = None
+                    u = cache_up(uid, user)
                     send_message(json)
                     pass
                 elif callback_data == '@annual':
@@ -240,6 +246,8 @@ def generate_response(data):
                         'text': msg,
                         'parse_mode': 'markdown'
                     }
+                    user['last_action'] = None
+                    u = cache_up(uid, user)
                     send_message(json)
                     pass
                 elif callback_data == '@redeem_code':
@@ -262,6 +270,8 @@ def generate_response(data):
                             'inline_keyboard': keyboard
                         }
                     }
+                    user['last_action'] = None
+                    u = cache_up(uid, user)
                     send_message(json)
                     pass
                 elif callback_data == '@my_redeem_code':
@@ -271,6 +281,8 @@ def generate_response(data):
                         'text': f'`{redeem_code}`',
                         'parse_mode': 'markdown'
                     }
+                    user['last_action'] = None
+                    u = cache_up(uid, user)
                     send_message(json)
                     pass
                 elif callback_data == '@register_redeem_code':
@@ -317,6 +329,8 @@ def generate_response(data):
                             'inline_keyboard': keyboard
                         }
                     }
+                    user['last_action'] = None
+                    u = cache_up(uid, user)
                     send_message(json)
                     pass
                 elif callback_data == '@amount':
@@ -337,6 +351,8 @@ def generate_response(data):
                             'inline_keyboard': keyboard
                         }
                     }
+                    user['last_action'] = None
+                    u = cache_up(uid, user)
                     send_message(json)
                     pass
                 elif callback_data == '@strategy':
@@ -360,6 +376,8 @@ def generate_response(data):
                             'inline_keyboard': keyboard
                         }
                     }
+                    user['last_action'] = None
+                    u = cache_up(uid, user)
                     send_message(json)
                     pass
                 elif callback_data == '@real_account':
@@ -396,14 +414,14 @@ def generate_response(data):
                     send_message(json)
                     pass
                 elif callback_data == '@percent_balance':
-                    user['settings']['amount']['type'] = 1
-                    user['last_action'] = 'amount_type_percent'
-                    u = cache_up(uid, user)
                     # amount
                     json = {
                         'chat_id': uid,
                         'text': f'{translate("enter_fix_amount", user["language"])}',
                     }
+                    user['settings']['amount']['type'] = 1
+                    user['last_action'] = 'amount_type_percent'
+                    u = cache_up(uid, user)
                     send_message(json)
                     pass
                 elif callback_data == '@without_martin_gale':
@@ -441,6 +459,8 @@ def generate_response(data):
                             'inline_keyboard': keyboard
                         }
                     }
+                    user['last_action'] = None
+                    u = cache_up(uid, user)
                     edit_message(json)
                     pass
                 elif callback_data == '@back_to_settings':
@@ -462,6 +482,8 @@ def generate_response(data):
                             'inline_keyboard': keyboard
                         }
                     }
+                    user['last_action'] = None
+                    u = cache_up(uid, user)
                     edit_message(json)
                     pass
             elif callback_type == '#confirm':
@@ -532,7 +554,6 @@ def generate_response(data):
         elif t == 'message':
             uid = query['from']['id']
             text = query['text']
-            print(text)
             user = cached(uid, {
                 'id': uid,
                 'username': query['from']['username'],
@@ -583,12 +604,16 @@ def generate_response(data):
                         'inline_keyboard': keyboard
                     }
                 }
+                user['last_action'] = None
+                u = cache_up(uid, user)
                 send_message(json)
             elif 'about' in text.lower():
                 json = {
                     'chat_id': uid,
                     'text': f'{translate("description", user["language"])}',
                 }
+                user['last_action'] = None
+                u = cache_up(uid, user)
                 send_message(json)
                 pass
             else:
@@ -673,12 +698,13 @@ def generate_response(data):
                     u = cache_up(uid, user)
                     return send_message(json)
                 elif user['last_action'] == 'register_redeem_code':
-
                     if 'parent' in user:
                         json = {
                             'chat_id': uid,
                             'text': f'{translate("promo_code_already_registered", user["language"])}',
                         }
+                        user['last_action'] = None
+                        u = cache_up(uid, user)
                         return send_message(json)
                     parent_user_id = int(verify_key(bytes.fromhex(text)))
                     if parent_user_id == uid:
@@ -686,6 +712,8 @@ def generate_response(data):
                             'chat_id': uid,
                             'text': f'{translate("promo_code_not_applicable", user["language"])}',
                         }
+                        user['last_action'] = None
+                        u = cache_up(uid, user)
                         return send_message(json)
                     parent_user = find_one('users', {'id': parent_user_id})
                     if parent_user is not None:
@@ -722,6 +750,8 @@ def generate_response(data):
                             'chat_id': uid,
                             'text': f'{translate("invalid_promo_code", user["language"])}',
                         }
+                        user['last_action'] = None
+                        u = cache_up(uid, user)
                         return send_message(json)
                     pass
                 elif user['last_action'] == 'contact_admin':
@@ -738,11 +768,11 @@ def generate_response(data):
                 #     'chat_id': uid,
                 #     'message_id': query['message_id'],
                 # })
-                # json = {
-                #     'chat_id': uid,
-                #     'text': '😊'
-                # }
-                # send_message(json)
+                json = {
+                    'chat_id': uid,
+                    'text': '😊'
+                }
+                send_message(json)
             pass
     except Exception as e:
         print(e)
