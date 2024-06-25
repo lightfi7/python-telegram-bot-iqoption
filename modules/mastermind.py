@@ -201,7 +201,6 @@ def generate_response(data):
                         }
                     }
                     send_message(json)
-
                     pass
                 elif callback_data == '@monthly':
                     wallet = None
@@ -636,8 +635,8 @@ def generate_response(data):
                             'parse_mode': 'markdown'
                         }
                         return send_message(json)
-                    user['settings']['account']['email'] = text
                     user['last_action'] = 'account_password'
+                    user['settings']['account']['email'] = text
                     cache_up(uid, user)
                     json = {
                         'chat_id': uid,
