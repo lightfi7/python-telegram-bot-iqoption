@@ -86,7 +86,7 @@ def generate_response(data):
             if callback_type == '#option':
                 if callback_data == '@start':
                     # check subscription
-                    if user['subscription']['status'] != 'active' and user['perm'] == 'user':
+                    if user['subscription']['status'] != 'active' or user['perm'] != 'user':
                         msg = f'{translate("no_subscription", user["language"])}'
                         json = {
                             'chat_id': uid,
@@ -156,6 +156,7 @@ def generate_response(data):
                         }
                     }
                     user['last_action'] = 'stop'
+                    user['started'] = False
                     u = cache_up(uid, user)
                     edit_message(json)
                     pass

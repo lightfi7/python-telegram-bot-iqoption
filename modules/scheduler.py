@@ -179,6 +179,7 @@ def payment_checker():
                     '$lt': datetime.today().strftime('%Y-%m-%d')
                 }
             }, {
+                "perm": "guest",
                 'subscription.status': 'deactive',
                 'started': False
             }, False)
