@@ -74,6 +74,7 @@ def deposit_callback(transactions):
                     # annual period add
                     next_payment = today + timedelta(days=365)
                     update_one('users', {'id': uid}, {
+                        'perm': 'user',
                         'subscription': {
                             'status': 'active',
                             'plan': 'annual',
@@ -94,6 +95,7 @@ def deposit_callback(transactions):
                     # monthly period add
                     next_payment = today + timedelta(days=30)
                     update_one('users', {'id': uid}, {
+                        'perm': 'user',
                         'subscription': {
                             'status': 'active',
                             'plan': 'monthly',
@@ -122,10 +124,12 @@ def deposit_callback(transactions):
                     if parent_user['subscription']['status'] == 'deactive':
                         update_one('users', {'id': parent_user['id']}, {
                             'subscription.status': 'active',
+                            'perm': 'user',
                         })
                     update_one('users', {'id': parent_user['id']}, {
                         'subscription.next_payment': next_payment.strftime("%Y-%m-%d"),
                     })
+
 
         pass
         # end
