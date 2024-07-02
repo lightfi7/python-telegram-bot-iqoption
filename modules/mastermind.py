@@ -185,7 +185,8 @@ def generate_response(data):
                 elif callback_data == '@subscribe':
                     msg = ''
                     if user['subscription']['status'] == 'active':
-                        msg += f'{translate("subscription_expiry", user["language"])}\n'.format(user['subscription']['plan'], user['subscription']['next_payment'])
+                        msg += f'{translate("subscription_expiry", user["language"])}\n'.format(
+                            user['subscription']['plan'], user['subscription']['next_payment'])
                         pass
                     msg += f'{translate("choose_plan", user["language"])}'
                     keyboard = [
@@ -675,7 +676,7 @@ def generate_response(data):
                     if user['settings']['account']['email'] is not None:
                         user['settings']['account']['password'] = text
                     else:
-                        json={
+                        json = {
                             'chat_id': uid,
                             'text': f'{translate("account_not_found", user["language"])}\n{translate("enter_account_email", user["language"])}'
                         }
@@ -723,7 +724,7 @@ def generate_response(data):
                             'parent': parent_user_id
                         })
                         update_one('users', {'id': parent_user_id}, {
-                            'team_count': parent_user['team_count']+1,
+                            'team_count': parent_user['team_count'] + 1,
                         })
                         if user['subscription']['next_payment'] is not None:
                             next_payment = datetime.strptime(user['subscription']['next_payment'],
@@ -744,6 +745,7 @@ def generate_response(data):
                             'chat_id': uid,
                             'text': f'{translate("promo_code_registered", user["language"])}',
                         }
+                        user['parent'] = parent_user_id
                         user['last_action'] = None
                         u = cache_up(uid, user)
                         return send_message(json)
