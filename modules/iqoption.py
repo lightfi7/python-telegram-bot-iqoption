@@ -94,10 +94,10 @@ class Iqoption:
                         msg = 'LOSS🔻'
                         msg = f'{translate("trade_success", self.user["language"])}'.format('LOSS',
                                                                                                           f'{win:6.2f}')
-                        send_message({
-                            'chat_id': self.uid,
-                            'text': msg
-                        })
+                        # send_message({
+                        #     'chat_id': self.uid,
+                        #     'text': msg
+                        # })
                     martin_gale += 1
                 else:
                     print("Win " + str(win) + "$")
