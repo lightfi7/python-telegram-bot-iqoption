@@ -113,12 +113,12 @@ def generate_response(data):
                            f'Trading strategy: {strategy}\n'
                            f'Do you want to start bot?')
                     keyboard = [
-                        [{'text': opt['label'], 'callback_data': f'#confirm>{opt["value"]}'} for opt in opts]
+                        [{'text': opt['label'], 'callback_data': f'{opt["value"]}'} for opt in opts]
                         for opts in [
                             [{'label': translate('yes', user['language']),
-                              'value': '@yes'},
+                              'value': '#confirm>@yes'},
                              {'label': translate('no', user['language']),
-                              'value': '@no'}
+                              'value': '#option>@back_to_main'}
                              ]
                         ]
                     ]
@@ -138,12 +138,12 @@ def generate_response(data):
                     # yes/no
                     msg = f'Do you want to stop bot?'
                     keyboard = [
-                        [{'text': opt['label'], 'callback_data': f'@confirm>{opt["value"]}'} for opt in opts]
+                        [{'text': opt['label'], 'callback_data': f'{opt["value"]}'} for opt in opts]
                         for opts in [
                             [{'label': translate('yes', user['language']),
-                              'value': '@yes'},
+                              'value': '#confirm>@yes'},
                              {'label': translate('no', user['language']),
-                              'value': '@no'}
+                              'value': '#option>@back_to_main'}
                              ]
                         ]
                     ]
@@ -156,7 +156,6 @@ def generate_response(data):
                         }
                     }
                     user['last_action'] = 'stop'
-                    user['started'] = False
                     u = cache_up(uid, user)
                     edit_message(json)
                     pass
@@ -489,11 +488,13 @@ def generate_response(data):
                     pass
             elif callback_type == '#confirm':
                 if callback_data == '@yes':
+                    msg = '😊'
                     if user['last_action'] == 'start':
                         user['started'] = True
+                        msg = f'{translate("started", user["language"])}'
                     if user['last_action'] == 'stop':
                         user['started'] = False
-                    msg = f'{translate("started", user["language"])}'
+                        msg = f'{translate("stopped", user["language"])}'
                     json = {
                         'chat_id': uid,
                         'text': msg,
