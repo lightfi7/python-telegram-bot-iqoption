@@ -27,7 +27,8 @@ def parse_data(data):
 
 
 def parse_channel_post(data):
-    pattern = r'(?:UTC -(\d+)\n\n)?(\w+/\w+(?:-OTC)?);(\d+:\d+);(\w+)\s(🟥|🟩)\n\n👇🏼Em caso de loss👇🏼\n\n1º Proteção ; (\d+:\d+)\n2º Proteção ; (\d+:\d+)'
+    # pattern = r'(?:UTC -(\d+)\n\n)?(\w+/\w+(?:-OTC)?);(\d+:\d+);(\w+)\s(🟥|🟩)\n\n👇🏼Em caso de loss👇🏼\n\n1º Proteção ; (\d+:\d+)\n2º Proteção ; (\d+:\d+)'
+    pattern = r'(?:UTC\s*-\s*(\d+)\n\n)?(\w+/\w+(?:;OTC)?);(\d+:\d+);(\w+)\s(🟥|🟩)\n\n👇🏼Em caso de loss👇🏼\n\n1º Proteção\s*;\s*(\d+:\d+)\n2º Proteção\s*;\s*(\d+:\d+)'
 
     match = re.search(pattern, data)
 
