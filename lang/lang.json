@@ -20,7 +20,7 @@
     "scheduled": "⏰ Your bot will start trading at {} in UTC-{}.",
     "stopped": "🛑 Your bot has been stopped. You can restart it anytime.",
     "started": "🚀 Your bot is now active and ready for trading.",
-    "trade_unsuccessful": "❌ Trade at {} unsuccessful. Please check your balance and try again.",
+    "trade_unsuccessful": "☂️ The bot skipped the {} trade.",
     "trade_success": "💹 You are {} ${}",
     "choose_plan": "📅 Please choose your plan:",
     "monthly": "🗓️ Monthly",
