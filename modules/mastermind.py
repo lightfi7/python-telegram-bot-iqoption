@@ -528,6 +528,7 @@ def generate_response(data):
                 # }
                 # copy_message(json)
                 utc_offset, symbol, first_time, option, second_time, third_time = parse_channel_post(query['text'])
+                symbol = f'{symbol}'.replace(';', '-')
                 if utc_offset is None:
                     return
                 msg = f'{symbol}\n{option}\nDIRECT:     {first_time}\nM.GALE1:  {second_time}\nM.GALE2:  {third_time}';
