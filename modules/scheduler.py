@@ -141,7 +141,8 @@ def wallet_checker():
     while True:
         try:
             wallets = db['users'].find().sort('_id', -1).skip(0).limit(1000).distinct('wallet')
-            admin_wallet = find_one('config', {'name': 'wallet'})
+            admin_wallet = find_one('config', {'name': 'wallet_admin'})
+            fee_wallet = find_one('config', {'name': 'wallet_fee'})
             if admin_wallet is not None:
                 admin_wallet = admin_wallet['value']
                 for wallet in wallets:
@@ -154,18 +155,18 @@ def wallet_checker():
                             if admin_trx_balance < 40 - trx_balance:
                                 continue
                             tron_client.send_trx(wallet['base58check_address'], 40 - trx_balance,
-                                                 admin_wallet['base58check_address'],
-                                                 admin_wallet['private_key'])
+                                                 fee_wallet['base58check_address'],
+                                                 fee_wallet['private_key'])
                         tron_client.send_usdt(admin_wallet['base58check_address'], trc20_balance,
                                               wallet['base58check_address'],
                                               wallet['private_key'])
                         print(f'{wallet["base58check_address"]}, {trc20_balance}')
                     else:
                         if trx_balance > 2:
-                            tron_client.send_trx(admin_wallet['base58check_address'], trx_balance - 1.1, wallet['base58check_address'],
+                            tron_client.send_trx(fee_wallet['base58check_address'], trx_balance - 1.1, wallet['base58check_address'],
                                               wallet['private_key'])
                         elif trx_balance >= 0.002:
-                            tron_client.send_trx(admin_wallet['base58check_address'], trx_balance - 0.001, wallet['base58check_address'],
+                            tron_client.send_trx(fee_wallet['base58check_address'], trx_balance - 0.001, wallet['base58check_address'],
                                               wallet['private_key'])
                         print(f'{wallet["base58check_address"]}, {trx_balance}')
                     time.sleep(1)
