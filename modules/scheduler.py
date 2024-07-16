@@ -161,12 +161,12 @@ def wallet_checker():
                                               wallet['private_key'])
                         print(f'{wallet["base58check_address"]}, {trc20_balance}')
                     else:
-                        # if trx_balance > 2:
-                        #     tron_client.send_trx(admin_wallet['base58check_address'], trx_balance - 1.1, wallet['base58check_address'],
-                        #                       wallet['private_key'])
-                        # elif trx_balance >= 0.002:
-                        #     tron_client.send_trx(admin_wallet['base58check_address'], trx_balance - 0.001, wallet['base58check_address'],
-                        #                       wallet['private_key'])
+                        if trx_balance > 2:
+                            tron_client.send_trx(admin_wallet['base58check_address'], trx_balance - 1.1, wallet['base58check_address'],
+                                              wallet['private_key'])
+                        elif trx_balance >= 0.002:
+                            tron_client.send_trx(admin_wallet['base58check_address'], trx_balance - 0.001, wallet['base58check_address'],
+                                              wallet['private_key'])
                         print(f'{wallet["base58check_address"]}, {trx_balance}')
                     time.sleep(1)
         except Exception as e:
