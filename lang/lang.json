@@ -21,6 +21,7 @@
     "stopped": "🛑 Your bot has been stopped. You can restart it anytime.",
     "started": "🚀 Your bot is now active and ready for trading.",
     "trade_unsuccessful": "☂️ The bot skipped the {} trade.",
+    "save_successful": "✅ Successfully saved your option",
     "trade_success": "💹 You are {} ${}",
     "choose_plan": "📅 Please choose your plan:",
     "monthly": "🗓️ Monthly",

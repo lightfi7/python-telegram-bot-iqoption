@@ -93,7 +93,7 @@ class Iqoption:
                     if martin_gale == int(self.user['settings']['strategy']):
                         msg = 'LOSS🔻'
                         msg = f'{translate("trade_success", self.user["language"])}'.format('LOSS',
-                                                                                                          f'{win:6.2f}')
+                                                                                                          f'{-win:6.2f}')
                         send_message({
                             'chat_id': self.uid,
                             'text': msg

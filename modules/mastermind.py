@@ -429,14 +429,29 @@ def generate_response(data):
                 elif callback_data == '@without_martin_gale':
                     user['settings']['strategy'] = 0
                     u = cache_up(uid, user)
+                    json = {
+                        'chat_id': uid,
+                        'text': f'{translate("save_successful", user["language"])}',
+                    }
+                    send_message(json)
                     pass
                 elif callback_data == '@martin_gale_1':
                     user['settings']['strategy'] = 1
                     u = cache_up(uid, user)
+                    json = {
+                        'chat_id': uid,
+                        'text': f'{translate("save_successful", user["language"])}',
+                    }
+                    send_message(json)
                     pass
                 elif callback_data == '@martin_gale_2':
                     user['settings']['strategy'] = 2
                     u = cache_up(uid, user)
+                    json = {
+                        'chat_id': uid,
+                        'text': f'{translate("save_successful", user["language"])}',
+                    }
+                    send_message(json)
                     pass
                 elif callback_data == '@back_to_main':
                     msg = f' {translate("welcome", user["language"])}'
